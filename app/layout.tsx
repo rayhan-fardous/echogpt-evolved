@@ -14,15 +14,27 @@ const fontHeading = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"),
   title: "EchoGPT — Your focused AI workspace",
   description: "A focused AI workspace for writing, analysis, and creative work.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/logo.png", sizes: "128x128", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   openGraph: {
     title: "EchoGPT",
     description: "A focused AI workspace for writing, analysis, and creative work.",
     type: "website",
+    images: [{ url: "/logo-512.png", width: 512, height: 512, alt: "EchoGPT Logo" }],
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
+    images: ["/logo-512.png"],
   },
 };
 

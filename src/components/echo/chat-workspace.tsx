@@ -66,168 +66,19 @@ import {
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
 import { BrandMark } from "./brand-mark";
-import avatar from "@/assets/profile-avatar.jpg";
+import { ModelSelector } from "./model-selector";
+import { SidebarNav, type ThreadSummary } from "./sidebar-nav";
+import { DEFAULT_MODELS, type AIModel } from "@/lib/models-data";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 
 type ChatMessage = { id: string; role: "user" | "assistant"; text: string };
-type ThreadSummary = { id: string; title: string; updated_at: string };
 const starters = [
   "Summarize a complex topic",
   "Draft a polished email",
   "Plan my next project",
   "Review and improve writing",
 ];
-
-function Sidebar({
-  onSelect,
-  threads,
-  user,
-}: {
-  onSelect?: () => void;
-  threads: ThreadSummary[];
-  user: User | null;
-}) {
-  const router = useRouter();
-  return (
-    <div className="glass-panel flex h-full flex-col border-r border-border">
-      <div className="flex h-18 items-center gap-3 px-5">
-        <BrandMark />
-        <span className="font-heading text-xl font-semibold">EchoGPT</span>
-      </div>
-      <div className="px-4 pb-4">
-        <Button
-          className="h-11 w-full justify-start rounded-lg shadow-sm"
-          onClick={() => {
-            router.push(`/chat/${crypto.randomUUID()}`);
-            onSelect?.();
-          }}
-        >
-          <Plus />
-          New conversation
-        </Button>
-      </div>
-      <div className="px-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            aria-label="Search conversations"
-            placeholder="Search conversations"
-            className="h-10 bg-background/55 pl-9"
-          />
-        </div>
-      </div>
-      <nav aria-label="Conversations and tools" className="flex-1 overflow-y-auto px-3 py-6">
-        <p className="px-3 pb-2 text-xs font-semibold uppercase text-muted-foreground">
-          Recent chats
-        </p>
-        <ul className="space-y-1">
-          {threads.length === 0 && (
-            <li className="px-3 py-3 text-sm text-muted-foreground">
-              {user ? "Your conversations will appear here." : "Sign in to sync your history."}
-            </li>
-          )}
-          {threads.map((thread, i) => (
-            <li key={thread.id}>
-              <button
-                onClick={() => {
-                  router.push(`/chat/${thread.id}`);
-                  onSelect?.();
-                }}
-                className={`grid min-h-11 w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-md px-3 text-left text-sm transition-colors focus-visible:outline-2 focus-visible:outline-ring ${i === 0 ? "bg-accent font-medium text-accent-foreground" : "text-muted-foreground hover:bg-accent/70 hover:text-foreground"}`}
-              >
-                <span className="truncate">{thread.title}</span>
-                <span className="text-xs opacity-70">
-                  {new Date(thread.updated_at).toLocaleDateString(undefined, {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </span>
-              </button>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-7 px-3 pb-2 text-xs font-semibold uppercase text-muted-foreground">
-          Studio tools
-        </p>
-        <ul className="space-y-1">
-          <li>
-            <Button variant="ghost" className="h-11 w-full justify-start text-muted-foreground">
-              <Image />
-              Image Studio
-            </Button>
-          </li>
-          <li>
-            <Button variant="ghost" className="h-11 w-full justify-start text-muted-foreground">
-              <Video />
-              Video Studio
-              <span className="ml-auto rounded bg-accent px-1.5 py-0.5 text-[10px] font-semibold text-primary">
-                PRO
-              </span>
-            </Button>
-          </li>
-          <li>
-            <Button variant="ghost" className="h-11 w-full justify-start text-muted-foreground">
-              <Archive />
-              Archived
-            </Button>
-          </li>
-        </ul>
-      </nav>
-      {user && <ProfileMenu user={user} />}
-    </div>
-  );
-}
-
-function ProfileMenu({ user }: { user: User }) {
-  const [dark, setDark] = useState(false);
-  const toggleDark = () => {
-    const next = !dark;
-    setDark(next);
-    document.documentElement.classList.toggle("dark", next);
-  };
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className="m-3 h-14 justify-start gap-3 border border-border bg-background/40 px-3"
-        >
-          <img
-            src={typeof avatar === "string" ? avatar : (avatar as { src?: string })?.src || "/profile-avatar.jpg"}
-            width={40}
-            height={40}
-            loading="lazy"
-            alt="Profile"
-            className="size-9 rounded-full object-cover"
-          />
-          <span className="min-w-0 flex-1 text-left">
-            <span className="block truncate text-sm font-semibold">
-              {user.user_metadata["full_name"] ?? user.email?.split("@")[0] ?? "Your profile"}
-            </span>
-            <span className="block truncate text-xs text-muted-foreground">{user.email}</span>
-          </span>
-          <MoreHorizontal />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" side="top" className="glass-panel w-56">
-        <DropdownMenuItem>
-          <Settings />
-          Settings
-        </DropdownMenuItem>
-        <DropdownMenuItem onSelect={toggleDark}>
-          {dark ? <Sun /> : <Moon />}
-          {dark ? "Light mode" : "Dark mode"}
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onSelect={() => supabase.auth.signOut()}>
-          <LogOut />
-          Sign out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
 
 function AuthDialog() {
   const [email, setEmail] = useState("");
@@ -259,7 +110,8 @@ function AuthDialog() {
         </Button>
       </DialogTrigger>
       <DialogContent className="glass-panel sm:max-w-sm">
-        <DialogHeader>
+        <DialogHeader className="items-center text-center">
+          <BrandMark className="mb-2 size-12" />
           <DialogTitle className="font-heading text-2xl">Welcome to EchoGPT</DialogTitle>
           <DialogDescription>Sign in to sync conversations across devices.</DialogDescription>
         </DialogHeader>
@@ -304,6 +156,7 @@ function AuthDialog() {
 }
 
 export function ChatWorkspace({ threadId }: { threadId?: string }) {
+  const [selectedModel, setSelectedModel] = useState<AIModel>(DEFAULT_MODELS[0]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [threads, setThreads] = useState<ThreadSummary[]>([]);
   const [user, setUser] = useState<User | null>(null);
@@ -395,7 +248,7 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
       const assistant = {
         id: crypto.randomUUID(),
         role: "assistant" as const,
-        text: "I’ve got it. This redesigned workspace is ready for a live AI connection, with your thread preserved securely when you sign in.",
+        text: `I’ve got it. Responses are powered by ${selectedModel.name}. Your thread is preserved securely when you sign in.`,
       };
       setMessages((v) => [...v, assistant]);
       if (activeUser && threadId) {
@@ -412,7 +265,7 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
   return (
     <div className="soft-grid flex h-dvh min-w-0 bg-background text-foreground">
       <aside className="hidden w-72 shrink-0 lg:block">
-        <Sidebar threads={threads} user={user} />
+        <SidebarNav threads={threads} user={user} currentThreadId={threadId} />
       </aside>
       <main className="flex min-w-0 flex-1 flex-col">
         <header className="glass-panel grid h-16 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border px-4 sm:px-6">
@@ -433,23 +286,18 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
                   <SheetTitle>Navigation</SheetTitle>
                   <SheetDescription>Conversation history and studio tools</SheetDescription>
                 </SheetHeader>
-                <Sidebar threads={threads} user={user} onSelect={() => setMobileOpen(false)} />
+                <SidebarNav
+                  threads={threads}
+                  user={user}
+                  currentThreadId={threadId}
+                  onSelect={() => setMobileOpen(false)}
+                />
               </SheetContent>
             </Sheet>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="min-w-0 gap-2">
-                  <span className="size-2 shrink-0 rounded-full bg-primary" />
-                  <span className="truncate">Echo 4.2 Turbo</span>
-                  <ChevronDown />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>Echo 4.2 Turbo</DropdownMenuItem>
-                <DropdownMenuItem>Echo Reasoning</DropdownMenuItem>
-                <DropdownMenuItem>Echo Fast</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <ModelSelector
+              selectedModel={selectedModel}
+              onSelectModel={setSelectedModel}
+            />
           </div>
           <div className="flex shrink-0 items-center gap-1">
             <Button
@@ -511,7 +359,7 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
             )}
             {status === "submitted" && (
               <p aria-live="polite" className="text-sm text-muted-foreground">
-                Echo is thinking…
+                {selectedModel.name} is thinking…
               </p>
             )}
           </ConversationContent>
@@ -525,7 +373,7 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
             >
               <PromptInputTextarea
                 ref={textareaRef}
-                placeholder="Ask Echo anything…"
+                placeholder={`Ask ${selectedModel.name} anything…`}
                 className="min-h-16 px-4 pt-4 text-base"
               />
               <PromptInputFooter>
@@ -546,7 +394,7 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
               </PromptInputFooter>
             </PromptInput>
             <p className="mt-2 text-center text-xs text-muted-foreground">
-              EchoGPT can make mistakes. Check important information.
+              {selectedModel.name} can make mistakes. Check important information.
             </p>
           </div>
         </div>
