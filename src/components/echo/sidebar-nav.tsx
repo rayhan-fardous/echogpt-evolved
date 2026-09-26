@@ -6,6 +6,7 @@ import type { User } from "@supabase/supabase-js";
 import {
   ExternalLink,
   Plus,
+  SquarePen,
   Search,
   Settings,
   Sun,
@@ -16,6 +17,7 @@ import {
   ChevronRight,
   LogOut,
   FolderOpen,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -333,11 +335,13 @@ export function SidebarNav({
   threads,
   user,
   onSelect,
+  onClose,
   currentThreadId,
 }: {
   threads: ThreadSummary[];
   user: User | null;
   onSelect?: () => void;
+  onClose?: () => void;
   currentThreadId?: string;
 }) {
   const router = useRouter();
@@ -368,33 +372,49 @@ export function SidebarNav({
 
   return (
     <aside className="glass-panel flex h-full flex-col border-r border-border bg-[#FBFBFE]/90 dark:bg-[#120F1D]/90 select-none">
-      {/* Top App Header */}
-      <div className="flex h-16 items-center justify-between px-5">
+      {/* Top App Header with brand mark and cross close button for smaller screens */}
+      <div className="flex h-16 items-center justify-between px-4 sm:px-5">
         <button
           onClick={() => {
             router.push("/");
             onSelect?.();
+            onClose?.();
           }}
-          className="flex items-center gap-3 transition-opacity hover:opacity-85 text-left"
+          className="flex items-center gap-2.5 transition-opacity hover:opacity-85 text-left"
         >
           <BrandMark className="size-8" />
           <span className="font-heading text-lg font-semibold tracking-tight">
             EchoGPT
           </span>
         </button>
+
+        {/* Cross button on the top to close the sidebar */}
+        <button
+          type="button"
+          aria-label="Close sidebar"
+          title="Close sidebar"
+          onClick={() => {
+            onClose?.();
+            onSelect?.();
+          }}
+          className="flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08] lg:hidden"
+        >
+          <X className="size-5" />
+        </button>
       </div>
 
-      {/* New conversation button */}
+      {/* New Chat button */}
       <div className="px-3.5 pb-2.5">
         <Button
-          className="h-10 w-full justify-start gap-2.5 rounded-lg font-medium shadow-sm transition-all"
+          className="h-10 w-full justify-start gap-2.5 rounded-xl font-medium shadow-sm transition-all"
           onClick={() => {
             router.push(`/chat/${crypto.randomUUID()}`);
             onSelect?.();
+            onClose?.();
           }}
         >
-          <Plus className="size-4" />
-          <span>New conversation</span>
+          <SquarePen className="size-4" />
+          <span>New Chat</span>
         </Button>
       </div>
 
@@ -407,7 +427,7 @@ export function SidebarNav({
             placeholder="Search conversations"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-9 rounded-lg bg-background/60 pl-9 text-xs transition-colors focus-visible:bg-background"
+            className="h-9 rounded-xl bg-background/60 pl-9 text-xs transition-colors focus-visible:bg-background"
           />
         </div>
       </div>
@@ -665,7 +685,7 @@ export function SidebarNav({
       </nav>
 
       {/* Bottom Dock / Footer: 4 action icons evenly distributed */}
-      <div className="mt-auto flex items-center justify-around border-t border-border/60 px-3 py-2.5 bg-background/40">
+      <div className="mt-auto flex items-center justify-around border-t border-border/60 px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] bg-background/50 backdrop-blur-sm">
         {/* Home */}
         <button
           type="button"
@@ -675,7 +695,7 @@ export function SidebarNav({
             router.push("/");
             onSelect?.();
           }}
-          className="flex size-9 items-center justify-center rounded-lg text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
+          className="flex size-9 items-center justify-center rounded-xl text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
         >
           <HomeIconCustom className="size-5" />
         </button>
@@ -686,7 +706,7 @@ export function SidebarNav({
           aria-label="Connectors Hub"
           title="Connectors Hub"
           onClick={() => setActiveModal("connectors")}
-          className="flex size-9 items-center justify-center rounded-lg text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
+          className="flex size-9 items-center justify-center rounded-xl text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
         >
           <HubIcon className="size-5" />
         </button>
@@ -697,7 +717,7 @@ export function SidebarNav({
           aria-label="Settings"
           title="Settings"
           onClick={() => setActiveModal("settings")}
-          className="flex size-9 items-center justify-center rounded-lg text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
+          className="flex size-9 items-center justify-center rounded-xl text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
         >
           <Settings className="size-5" />
         </button>
@@ -708,7 +728,7 @@ export function SidebarNav({
           aria-label="Toggle theme"
           title={dark ? "Light mode" : "Dark mode"}
           onClick={toggleDark}
-          className="flex size-9 items-center justify-center rounded-lg text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
+          className="flex size-9 items-center justify-center rounded-xl text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
         >
           {dark ? <Moon className="size-5" /> : <Sun className="size-5" />}
         </button>
@@ -882,7 +902,7 @@ export function SidebarNav({
             ].map((conn) => (
               <div
                 key={conn.name}
-                className="flex items-center justify-between rounded-lg border border-border/70 bg-background/50 p-3 text-xs"
+                className="flex items-center justify-between rounded-xl border border-border/70 bg-background/50 p-3 text-xs"
               >
                 <div>
                   <div className="font-medium text-foreground">{conn.name}</div>
@@ -927,7 +947,7 @@ export function SidebarNav({
             ].map((item) => (
               <div
                 key={item.title}
-                className="flex items-center justify-between rounded-lg border border-border/70 bg-background/50 p-3"
+                className="flex items-center justify-between rounded-xl border border-border/70 bg-background/50 p-3"
               >
                 <div>
                   <div className="font-medium text-foreground">{item.title}</div>

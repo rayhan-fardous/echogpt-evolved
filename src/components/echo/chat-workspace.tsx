@@ -57,16 +57,9 @@ import {
   MessageContent,
   MessageResponse,
 } from "@/components/ai-elements/message";
-import {
-  PromptInput,
-  PromptInputButton,
-  PromptInputFooter,
-  PromptInputSubmit,
-  PromptInputTextarea,
-  PromptInputTools,
-} from "@/components/ai-elements/prompt-input";
 import { BrandMark } from "./brand-mark";
 import { ModelSelector } from "./model-selector";
+import { ChatInputBox } from "./chat-input-box";
 import { SidebarNav, type ThreadSummary } from "./sidebar-nav";
 import { DEFAULT_MODELS, type AIModel } from "@/lib/models-data";
 import { supabase } from "@/integrations/supabase/client";
@@ -162,10 +155,6 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<"ready" | "submitted">("ready");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  useEffect(() => {
-    textareaRef.current?.focus();
-  }, [threadId, status]);
   useEffect(() => {
     let active = true;
     const loadUser = async () => {
@@ -281,7 +270,10 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
                   <Menu />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[86vw] max-w-72 p-0">
+              <SheetContent
+                side="left"
+                className="w-[85vw] max-w-[320px] sm:max-w-xs p-0 border-r border-border [&>button:last-child]:hidden"
+              >
                 <SheetHeader className="sr-only">
                   <SheetTitle>Navigation</SheetTitle>
                   <SheetDescription>Conversation history and studio tools</SheetDescription>
@@ -291,6 +283,7 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
                   user={user}
                   currentThreadId={threadId}
                   onSelect={() => setMobileOpen(false)}
+                  onClose={() => setMobileOpen(false)}
                 />
               </SheetContent>
             </Sheet>
@@ -330,7 +323,7 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
                     <Button
                       key={s}
                       variant="outline"
-                      className="glass-panel h-auto min-h-16 justify-start whitespace-normal p-4 text-left"
+                      className="glass-panel h-auto min-h-16 justify-start whitespace-normal p-4 sm:p-5 text-left rounded-2xl border-border/80 hover:border-primary/40 transition-all shadow-xs"
                       onClick={() => send({ text: s })}
                     >
                       {s}
@@ -365,34 +358,14 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
           </ConversationContent>
           <ConversationScrollButton aria-label="Scroll to latest message" />
         </Conversation>
-        <div className="glass-panel shrink-0 border-t border-border px-4 pb-3 pt-4 sm:px-6">
+        <div className="glass-panel shrink-0 border-t border-border px-4 pb-3 pt-3 sm:px-6">
           <div className="mx-auto max-w-3xl">
-            <PromptInput
+            <ChatInputBox
+              selectedModel={selectedModel}
+              onSelectModel={setSelectedModel}
               onSubmit={send}
-              className="rounded-xl border-border bg-background/70 shadow-lg backdrop-blur-xl"
-            >
-              <PromptInputTextarea
-                ref={textareaRef}
-                placeholder={`Ask ${selectedModel.name} anything…`}
-                className="min-h-16 px-4 pt-4 text-base"
-              />
-              <PromptInputFooter>
-                <PromptInputTools>
-                  <PromptInputButton tooltip="Attach file" aria-label="Attach file">
-                    <Paperclip />
-                  </PromptInputButton>
-                  <PromptInputButton tooltip="Use voice" aria-label="Use voice">
-                    <Mic />
-                  </PromptInputButton>
-                </PromptInputTools>
-                <PromptInputSubmit
-                  status={status}
-                  disabled={status === "submitted"}
-                  className="size-10 rounded-lg"
-                  aria-label="Send message"
-                />
-              </PromptInputFooter>
-            </PromptInput>
+              status={status}
+            />
             <p className="mt-2 text-center text-xs text-muted-foreground">
               {selectedModel.name} can make mistakes. Check important information.
             </p>
