@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import {
@@ -21,6 +22,8 @@ import {
   Share2,
   X,
   Pin,
+  ClipboardList,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -361,11 +364,10 @@ export function SidebarNav({
   useEffect(() => {
     try {
       const saved = localStorage.getItem("echo-theme");
-      const isDark = saved
-        ? saved === "dark"
-        : document.documentElement.classList.contains("dark") ||
-          window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setDark(isDark);
+      const isDark = saved === "dark";
+      requestAnimationFrame(() => {
+        setDark(isDark);
+      });
       document.documentElement.classList.toggle("dark", isDark);
     } catch {
       // ignore
@@ -863,6 +865,32 @@ export function SidebarNav({
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>
+            </div>
+
+            {/* Divider */}
+            <div className="mx-2 border-t border-border/50" />
+
+            {/* TERMS AND CONDITIONS */}
+            <div className="p-1.5 space-y-0.5">
+              <div className="px-2.5 pt-1.5 pb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase select-none">
+                TERMS AND CONDITIONS
+              </div>
+              <Link
+                href="/terms-of-use"
+                onClick={() => setProfilePopoverOpen(false)}
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+              >
+                <ClipboardList className="size-4 shrink-0 text-muted-foreground" />
+                <span className="font-medium">Terms of Use</span>
+              </Link>
+              <Link
+                href="/privacy-policy"
+                onClick={() => setProfilePopoverOpen(false)}
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+              >
+                <ShieldCheck className="size-4 shrink-0 text-muted-foreground" />
+                <span className="font-medium">Privacy Policy</span>
+              </Link>
             </div>
 
             {/* Sign out button when authenticated */}
@@ -1524,6 +1552,33 @@ export function SidebarNav({
                 {dark ? <Moon className="size-3.5" /> : <Sun className="size-3.5" />}
                 {dark ? "Dark" : "Light"}
               </Button>
+            </div>
+
+            <div className="rounded-lg border border-border/80 bg-background/50 p-3 space-y-2">
+              <div>
+                <div className="font-medium text-foreground">Legal & Policies</div>
+                <div className="text-muted-foreground">
+                  Review terms of service and data protection policies
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2 pt-1">
+                <Link
+                  href="/terms-of-use"
+                  onClick={() => setActiveModal(null)}
+                  className="flex items-center justify-center gap-1.5 rounded-lg border border-border/70 bg-background/80 hover:bg-background px-3 py-2 text-xs font-medium text-foreground transition-colors cursor-pointer"
+                >
+                  <ClipboardList className="size-3.5 text-muted-foreground shrink-0" />
+                  <span>Terms of Use</span>
+                </Link>
+                <Link
+                  href="/privacy-policy"
+                  onClick={() => setActiveModal(null)}
+                  className="flex items-center justify-center gap-1.5 rounded-lg border border-border/70 bg-background/80 hover:bg-background px-3 py-2 text-xs font-medium text-foreground transition-colors cursor-pointer"
+                >
+                  <ShieldCheck className="size-3.5 text-muted-foreground shrink-0" />
+                  <span>Privacy Policy</span>
+                </Link>
+              </div>
             </div>
 
             {user ? (

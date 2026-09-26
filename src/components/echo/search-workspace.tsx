@@ -68,7 +68,7 @@ export function SearchWorkspace() {
   const [selectedModelFilter, setSelectedModelFilter] = useState("All");
 
   // Local metadata index
-  const [metaMap, setMetaMap] = useState<Record<string, ThreadMetadata>>({});
+  const [metaMap, setMetaMap] = useState<Record<string, ThreadMetadata>>(() => getAllThreadMetadata());
 
   // Rename modal state
   const [renameTarget, setRenameTarget] = useState<ThreadMetadata | null>(null);
@@ -125,7 +125,6 @@ export function SearchWorkspace() {
   };
 
   useEffect(() => {
-    refreshLocalMeta();
     window.addEventListener("echo-threads-updated", refreshLocalMeta);
     return () => {
       window.removeEventListener("echo-threads-updated", refreshLocalMeta);
