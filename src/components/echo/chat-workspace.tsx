@@ -1,25 +1,7 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
-import {
-  Archive,
-  ChevronDown,
-  Copy,
-  Image,
-  LogOut,
-  Menu,
-  Mic,
-  Moon,
-  MoreHorizontal,
-  Paperclip,
-  Plus,
-  Search,
-  Settings,
-  Share2,
-  Sun,
-  Video,
-} from "lucide-react";
+import { Copy, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -29,22 +11,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import {
   Conversation,
   ConversationContent,
@@ -58,12 +24,11 @@ import {
   MessageResponse,
 } from "@/components/ai-elements/message";
 import { BrandMark } from "./brand-mark";
-import { ModelSelector } from "./model-selector";
 import { ChatInputBox } from "./chat-input-box";
 import { SidebarNav, type ThreadSummary } from "./sidebar-nav";
 import { DEFAULT_MODELS, type AIModel } from "@/lib/models-data";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
+import { saveThreadMetadata } from "@/lib/thread-storage";
 
 type ChatMessage = { id: string; role: "user" | "assistant"; text: string };
 const starters = [
@@ -72,81 +37,6 @@ const starters = [
   "Plan my next project",
   "Review and improve writing",
 ];
-
-function AuthDialog() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [notice, setNotice] = useState("");
-  const signIn = async () => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setNotice(error ? error.message : "Signed in successfully.");
-  };
-  const signUp = async () => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: window.location.origin },
-    });
-    setNotice(error ? error.message : "Check your email to confirm your account.");
-  };
-  const google = async () => {
-    const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
-    });
-    if (result.error) setNotice(result.error.message);
-  };
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="bg-background/55">
-          Sign in
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="glass-panel sm:max-w-sm">
-        <DialogHeader className="items-center text-center">
-          <BrandMark className="mb-2 size-12" />
-          <DialogTitle className="font-heading text-2xl">Welcome to EchoGPT</DialogTitle>
-          <DialogDescription>Sign in to sync conversations across devices.</DialogDescription>
-        </DialogHeader>
-        <div className="space-y-3">
-          <Button variant="outline" className="h-11 w-full" onClick={google}>
-            Continue with Google
-          </Button>
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="h-px flex-1 bg-border" />
-            or use email
-            <span className="h-px flex-1 bg-border" />
-          </div>
-          <Input
-            aria-label="Email address"
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input
-            aria-label="Password"
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <div className="grid grid-cols-2 gap-2">
-            <Button onClick={signIn}>Sign in</Button>
-            <Button variant="outline" onClick={signUp}>
-              Create account
-            </Button>
-          </div>
-          {notice && (
-            <p aria-live="polite" className="text-sm text-muted-foreground">
-              {notice}
-            </p>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
 
 export function ChatWorkspace({ threadId }: { threadId?: string }) {
   const [selectedModel, setSelectedModel] = useState<AIModel>(DEFAULT_MODELS[0]);
@@ -173,21 +63,36 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
     };
   }, []);
   useEffect(() => {
+    let ignore = false;
     if (!user) {
-      setThreads([]);
-      return;
+      Promise.resolve().then(() => {
+        if (!ignore) setThreads([]);
+      });
+      return () => {
+        ignore = true;
+      };
     }
     void supabase
       .from("threads")
       .select("id,title,updated_at")
       .order("updated_at", { ascending: false })
       .limit(20)
-      .then(({ data }) => setThreads(data ?? []));
+      .then(({ data }) => {
+        if (!ignore) setThreads(data ?? []);
+      });
+    return () => {
+      ignore = true;
+    };
   }, [user]);
   useEffect(() => {
+    let ignore = false;
     if (!user || !threadId) {
-      setMessages([]);
-      return;
+      Promise.resolve().then(() => {
+        if (!ignore) setMessages([]);
+      });
+      return () => {
+        ignore = true;
+      };
     }
     void supabase
       .from("messages")
@@ -195,6 +100,7 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
       .eq("thread_id", threadId)
       .order("created_at", { ascending: true })
       .then(({ data }) => {
+        if (ignore) return;
         const loaded = (data ?? []).flatMap((row) => {
           if (row.role !== "user" && row.role !== "assistant") return [];
           const parts = Array.isArray(row.parts) ? row.parts : [];
@@ -213,12 +119,22 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
         });
         setMessages(loaded);
       });
+    return () => {
+      ignore = true;
+    };
   }, [threadId, user]);
   const send = async ({ text }: { text: string }) => {
     if (!text.trim() || status === "submitted") return;
     const user: ChatMessage = { id: crypto.randomUUID(), role: "user", text: text.trim() };
     setMessages((v) => [...v, user]);
     setStatus("submitted");
+    if (threadId) {
+      saveThreadMetadata(threadId, {
+        title: text.trim().slice(0, 64),
+        model: selectedModel,
+        updated_at: new Date().toISOString(),
+      });
+    }
     const activeUser = (await supabase.auth.getUser()).data.user;
     if (activeUser && threadId) {
       await supabase.from("threads").upsert({
@@ -256,54 +172,38 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
       <aside className="hidden w-72 shrink-0 lg:block">
         <SidebarNav threads={threads} user={user} currentThreadId={threadId} />
       </aside>
-      <main className="flex min-w-0 flex-1 flex-col">
-        <header className="glass-panel grid h-16 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b border-border px-4 sm:px-6">
-          <div className="flex min-w-0 items-center gap-2">
-            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  aria-label="Open navigation"
-                  variant="ghost"
-                  size="icon"
-                  className="min-h-11 min-w-11 lg:hidden"
-                >
-                  <Menu />
-                </Button>
-              </SheetTrigger>
-              <SheetContent
-                side="left"
-                className="w-[85vw] max-w-[320px] sm:max-w-xs p-0 border-r border-border [&>button:last-child]:hidden"
+      <main className="relative flex min-w-0 flex-1 flex-col">
+        {/* Floating Mobile Sidebar Navigation Toggle */}
+        <div className="absolute top-3.5 left-3.5 z-30 lg:hidden">
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button
+                aria-label="Open navigation"
+                variant="outline"
+                size="icon"
+                className="size-9 rounded-xl bg-background/85 backdrop-blur-md border-border/80 shadow-xs hover:bg-accent cursor-pointer"
               >
-                <SheetHeader className="sr-only">
-                  <SheetTitle>Navigation</SheetTitle>
-                  <SheetDescription>Conversation history and studio tools</SheetDescription>
-                </SheetHeader>
-                <SidebarNav
-                  threads={threads}
-                  user={user}
-                  currentThreadId={threadId}
-                  onSelect={() => setMobileOpen(false)}
-                  onClose={() => setMobileOpen(false)}
-                />
-              </SheetContent>
-            </Sheet>
-            <ModelSelector
-              selectedModel={selectedModel}
-              onSelectModel={setSelectedModel}
-            />
-          </div>
-          <div className="flex shrink-0 items-center gap-1">
-            <Button
-              aria-label="Share conversation"
-              variant="ghost"
-              size="icon"
-              className="min-h-11 min-w-11"
+                <Menu className="size-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent
+              side="left"
+              className="w-[85vw] max-w-[320px] sm:max-w-xs p-0 border-r border-border [&>button:last-child]:hidden"
             >
-              <Share2 />
-            </Button>
-            {!user && <AuthDialog />}
-          </div>
-        </header>
+              <SheetHeader className="sr-only">
+                <SheetTitle>Navigation</SheetTitle>
+                <SheetDescription>Conversation history and studio tools</SheetDescription>
+              </SheetHeader>
+              <SidebarNav
+                threads={threads}
+                user={user}
+                currentThreadId={threadId}
+                onSelect={() => setMobileOpen(false)}
+                onClose={() => setMobileOpen(false)}
+              />
+            </SheetContent>
+          </Sheet>
+        </div>
         <Conversation className="min-h-0">
           <ConversationContent className="mx-auto w-full max-w-3xl gap-8 px-4 pb-8 pt-10 sm:px-8">
             {messages.length === 0 ? (

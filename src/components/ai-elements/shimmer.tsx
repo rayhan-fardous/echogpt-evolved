@@ -8,19 +8,13 @@ import { memo, useMemo } from "react";
 
 type MotionHTMLProps = MotionProps & Record<string, unknown>;
 
-// Cache motion components at module level to avoid creating during render
-const motionComponentCache = new Map<
-  keyof JSX.IntrinsicElements,
-  React.ComponentType<MotionHTMLProps>
->();
-
-const getMotionComponent = (element: keyof JSX.IntrinsicElements) => {
-  let component = motionComponentCache.get(element);
-  if (!component) {
-    component = motion.create(element);
-    motionComponentCache.set(element, component);
-  }
-  return component;
+const staticMotionComponents: Record<string, React.ComponentType<MotionHTMLProps>> = {
+  p: motion.p as unknown as React.ComponentType<MotionHTMLProps>,
+  span: motion.span as unknown as React.ComponentType<MotionHTMLProps>,
+  div: motion.div as unknown as React.ComponentType<MotionHTMLProps>,
+  h1: motion.h1 as unknown as React.ComponentType<MotionHTMLProps>,
+  h2: motion.h2 as unknown as React.ComponentType<MotionHTMLProps>,
+  h3: motion.h3 as unknown as React.ComponentType<MotionHTMLProps>,
 };
 
 export interface TextShimmerProps {
@@ -38,7 +32,8 @@ const ShimmerComponent = ({
   duration = 2,
   spread = 2,
 }: TextShimmerProps) => {
-  const MotionComponent = getMotionComponent(Component as keyof JSX.IntrinsicElements);
+  const MotionComponent =
+    staticMotionComponents[Component as string] || staticMotionComponents.p;
 
   const dynamicSpread = useMemo(() => (children?.length ?? 0) * spread, [children, spread]);
 

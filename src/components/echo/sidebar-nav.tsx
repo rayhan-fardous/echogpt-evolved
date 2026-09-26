@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, useMemo } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import {
   ExternalLink,
@@ -16,8 +16,11 @@ import {
   ChevronDown,
   ChevronRight,
   LogOut,
-  FolderOpen,
+  LogIn,
+  Star,
+  Share2,
   X,
+  Pin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,8 +31,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 import { BrandMark } from "./brand-mark";
 import { supabase } from "@/integrations/supabase/client";
+import { getAllThreadMetadata, type ThreadMetadata } from "@/lib/thread-storage";
+import { AuthDialog } from "./auth-dialog";
+import { ShareWebsiteDialog } from "./share-website-dialog";
 import avatar from "@/assets/profile-avatar.jpg";
 
 export type ThreadSummary = { id: string; title: string; updated_at: string };
@@ -291,44 +303,6 @@ function DiscordIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function HomeIconCustom({ className = "size-5" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <path d="M12 3 3 10.5V20a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V10.5L12 3z" />
-      <path d="M9 21v-6a3 3 0 0 1 6 0v6" />
-    </svg>
-  );
-}
-
-function HubIcon({ className = "size-5" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={className}
-    >
-      <circle cx="12" cy="6" r="2.5" />
-      <circle cx="6" cy="18" r="2.5" />
-      <circle cx="18" cy="18" r="2.5" />
-      <path d="M12 8.5v3.5" />
-      <path d="m12 12-4.5 4" />
-      <path d="m12 12 4.5 4" />
-    </svg>
-  );
-}
-
 /* ---------------- Main SidebarNav Component ---------------- */
 
 export function SidebarNav({
@@ -345,30 +319,107 @@ export function SidebarNav({
   currentThreadId?: string;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
+  const isSearchActive = pathname === "/search";
   const [search, setSearch] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [dark, setDark] = useState(false);
+  const [localThreads, setLocalThreads] = useState<ThreadSummary[]>([]);
 
   useEffect(() => {
-    const isDark =
-      document.documentElement.classList.contains("dark") ||
-      (typeof window !== "undefined" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setDark(isDark);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        router.push("/search");
+        onSelect?.();
+        onClose?.();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [router, onSelect, onClose]);
+
+  const [localMetaMap, setLocalMetaMap] = useState<Record<string, ThreadMetadata>>({});
+
+  useEffect(() => {
+    const syncLocal = () => {
+      const all = getAllThreadMetadata();
+      setLocalMetaMap(all);
+      const summaries = Object.values(all).map((t) => ({
+        id: t.id,
+        title: t.title,
+        updated_at: t.updated_at,
+      }));
+      setLocalThreads(summaries);
+    };
+    syncLocal();
+    window.addEventListener("echo-threads-updated", syncLocal);
+    return () => window.removeEventListener("echo-threads-updated", syncLocal);
   }, []);
 
-  const toggleDark = () => {
-    const next = !dark;
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("echo-theme");
+      const isDark = saved
+        ? saved === "dark"
+        : document.documentElement.classList.contains("dark") ||
+          window.matchMedia("(prefers-color-scheme: dark)").matches;
+      setDark(isDark);
+      document.documentElement.classList.toggle("dark", isDark);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const [profilePopoverOpen, setProfilePopoverOpen] = useState(false);
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+
+  const displayName =
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    (user?.email ? user.email.split("@")[0] : "RayHan Fardous");
+  const displayEmail = user?.email || "";
+  const userAvatarSrc =
+    user?.user_metadata?.avatar_url ||
+    user?.user_metadata?.picture ||
+    (typeof avatar === "string"
+      ? avatar
+      : (avatar as { src?: string })?.src || "/profile-avatar.jpg");
+
+  const toggleDark = (checked?: boolean) => {
+    const next = typeof checked === "boolean" ? checked : !dark;
     setDark(next);
     document.documentElement.classList.toggle("dark", next);
+    try {
+      localStorage.setItem("echo-theme", next ? "dark" : "light");
+    } catch {}
   };
 
+  const rawThreads = user ? (threads.length > 0 ? threads : localThreads) : [];
+  const effectiveThreads = useMemo(() => {
+    return [...rawThreads].sort((a, b) => {
+      const pinA = localMetaMap[a.id]?.isPinned ?? false;
+      const pinB = localMetaMap[b.id]?.isPinned ?? false;
+      if (pinA && !pinB) return -1;
+      if (!pinA && pinB) return 1;
+      if (pinA && pinB) {
+        const timePinA = localMetaMap[a.id]?.pinnedAt ? new Date(localMetaMap[a.id].pinnedAt!).getTime() : 0;
+        const timePinB = localMetaMap[b.id]?.pinnedAt ? new Date(localMetaMap[b.id].pinnedAt!).getTime() : 0;
+        if (timePinA !== timePinB) return timePinB - timePinA;
+      }
+      const timeA = a.updated_at ? new Date(a.updated_at).getTime() || 0 : 0;
+      const timeB = b.updated_at ? new Date(b.updated_at).getTime() || 0 : 0;
+      return timeB - timeA;
+    });
+  }, [rawThreads, localMetaMap]);
+
   const filteredThreads = search.trim()
-    ? threads.filter((t) =>
+    ? effectiveThreads.filter((t) =>
         t.title.toLowerCase().includes(search.toLowerCase()),
       )
-    : threads;
+    : effectiveThreads;
 
   return (
     <aside className="glass-panel flex h-full flex-col border-r border-border bg-[#FBFBFE]/90 dark:bg-[#120F1D]/90 select-none">
@@ -418,18 +469,34 @@ export function SidebarNav({
         </Button>
       </div>
 
-      {/* Search Input */}
-      <div className="px-3.5 pb-3">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/70" />
-          <Input
-            aria-label="Search conversations"
-            placeholder="Search conversations"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="h-9 rounded-xl bg-background/60 pl-9 text-xs transition-colors focus-visible:bg-background"
+      {/* Search Chat Button */}
+      <div className="px-3.5 pb-2.5">
+        <button
+          type="button"
+          aria-label="Search chat"
+          onClick={() => {
+            router.push("/search");
+            onSelect?.();
+            onClose?.();
+          }}
+          className={`group flex h-10 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium transition-all ${
+            isSearchActive
+              ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+              : "text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+          }`}
+        >
+          <Search
+            className={`size-4 transition-colors shrink-0 ${
+              isSearchActive
+                ? "text-primary"
+                : "text-muted-foreground/90 group-hover:text-foreground"
+            }`}
           />
-        </div>
+          <span className="truncate">Search chat</span>
+          <kbd className="ml-auto pointer-events-none hidden h-5 select-none items-center gap-1 rounded border border-border/60 bg-muted/40 px-1.5 font-mono text-[10px] font-medium text-muted-foreground/80 sm:inline-flex">
+            ⌘K
+          </kbd>
+        </button>
       </div>
 
       {/* Main Scrollable Navigation Area */}
@@ -530,6 +597,7 @@ export function SidebarNav({
                   ) : (
                     filteredThreads.map((thread) => {
                       const isActive = thread.id === currentThreadId;
+                      const isPinned = localMetaMap[thread.id]?.isPinned ?? false;
                       return (
                         <button
                           key={thread.id}
@@ -543,7 +611,12 @@ export function SidebarNav({
                               : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
                           }`}
                         >
-                          <span className="truncate">{thread.title}</span>
+                          <div className="flex min-w-0 items-center gap-1.5">
+                            {isPinned && (
+                              <Pin className="size-3 text-primary rotate-45 shrink-0" />
+                            )}
+                            <span className="truncate">{thread.title}</span>
+                          </div>
                           <span className="shrink-0 text-[10px] opacity-70">
                             {new Date(thread.updated_at).toLocaleDateString(
                               undefined,
@@ -684,54 +757,177 @@ export function SidebarNav({
         </div>
       </nav>
 
-      {/* Bottom Dock / Footer: 4 action icons evenly distributed */}
-      <div className="mt-auto flex items-center justify-around border-t border-border/60 px-3 py-2.5 pb-[max(0.625rem,env(safe-area-inset-bottom))] bg-background/50 backdrop-blur-sm">
-        {/* Home */}
-        <button
-          type="button"
-          aria-label="Home"
-          title="Home"
-          onClick={() => {
-            router.push("/");
-            onSelect?.();
-          }}
-          className="flex size-9 items-center justify-center rounded-xl text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
-        >
-          <HomeIconCustom className="size-5" />
-        </button>
+      {/* Bottom Actions: Settings button (above) & Sign in / Account info (below) */}
+      <div className="mt-auto border-t border-border/60 p-3 space-y-2 bg-background/50 backdrop-blur-sm">
+        {/* Settings button with Popover */}
+        <Popover open={profilePopoverOpen} onOpenChange={setProfilePopoverOpen}>
+          <PopoverTrigger asChild>
+            <button
+              type="button"
+              className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+            >
+              <Settings className="size-4 text-muted-foreground shrink-0" />
+              <span>Settings</span>
+            </button>
+          </PopoverTrigger>
 
-        {/* Hub / Connectors */}
-        <button
-          type="button"
-          aria-label="Connectors Hub"
-          title="Connectors Hub"
-          onClick={() => setActiveModal("connectors")}
-          className="flex size-9 items-center justify-center rounded-xl text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
-        >
-          <HubIcon className="size-5" />
-        </button>
+          <PopoverContent
+            side="top"
+            align="start"
+            sideOffset={8}
+            className="w-64 p-0 overflow-hidden rounded-2xl border border-border/80 bg-background text-foreground shadow-2xl mb-1"
+          >
+            {/* User Info Header only if authenticated */}
+            {user && (
+              <div className="px-4 py-3 border-b border-border/50">
+                <div className="font-semibold text-sm text-foreground truncate">
+                  {displayName}
+                </div>
+                <div className="text-xs text-muted-foreground truncate mt-0.5">
+                  {displayEmail}
+                </div>
+              </div>
+            )}
 
-        {/* Settings / Account */}
-        <button
-          type="button"
-          aria-label="Settings"
-          title="Settings"
-          onClick={() => setActiveModal("settings")}
-          className="flex size-9 items-center justify-center rounded-xl text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
-        >
-          <Settings className="size-5" />
-        </button>
+            {/* Menu options */}
+            <div className="p-1.5 space-y-0.5">
+              {/* Upgrade */}
+              <button
+                type="button"
+                onClick={() => {
+                  setProfilePopoverOpen(false);
+                  setActiveModal("subscriptions");
+                }}
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+              >
+                <Star className="size-4 shrink-0" />
+                <span className="font-medium">Upgrade</span>
+              </button>
 
-        {/* Theme Toggle */}
-        <button
-          type="button"
-          aria-label="Toggle theme"
-          title={dark ? "Light mode" : "Dark mode"}
-          onClick={toggleDark}
-          className="flex size-9 items-center justify-center rounded-xl text-muted-foreground/90 transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08]"
-        >
-          {dark ? <Moon className="size-5" /> : <Sun className="size-5" />}
-        </button>
+              {/* Preferences */}
+              <button
+                type="button"
+                onClick={() => {
+                  setProfilePopoverOpen(false);
+                  setActiveModal("settings");
+                }}
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+              >
+                <Settings className="size-4 shrink-0" />
+                <span className="font-medium">Preferences</span>
+              </button>
+
+              {/* Share Website */}
+              <button
+                type="button"
+                onClick={() => {
+                  setProfilePopoverOpen(false);
+                  setShareDialogOpen(true);
+                }}
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+              >
+                <Share2 className="size-4 shrink-0" />
+                <span className="font-medium">Share Website</span>
+              </button>
+            </div>
+
+            {/* Divider */}
+            <div className="mx-2 border-t border-border/50" />
+
+            {/* Dark Mode Row */}
+            <div className="p-1.5">
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => toggleDark()}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleDark();
+                  }
+                }}
+                className="flex items-center justify-between rounded-xl px-2.5 py-2 text-sm text-foreground/90 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer transition-colors select-none"
+              >
+                <div className="flex items-center gap-3">
+                  {dark ? (
+                    <Moon className="size-4 shrink-0 text-primary" />
+                  ) : (
+                    <Sun className="size-4 shrink-0 text-muted-foreground" />
+                  )}
+                  <span className="font-medium">Dark Mode</span>
+                </div>
+                <Switch
+                  checked={dark}
+                  onCheckedChange={(val) => toggleDark(val)}
+                  aria-label="Toggle dark mode"
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </div>
+            </div>
+
+            {/* Sign out button when authenticated */}
+            {user && (
+              <>
+                <div className="mx-2 border-t border-border/50" />
+                <div className="p-1.5">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setProfilePopoverOpen(false);
+                      await supabase.auth.signOut();
+                    }}
+                    className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm font-medium text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="size-4 shrink-0" />
+                    <span>Sign out</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </PopoverContent>
+        </Popover>
+
+        {/* Below Settings: Sign in button if logged out, or Account Info card if logged in */}
+        {user ? (
+          <div
+            onClick={() => setProfilePopoverOpen(true)}
+            className="group flex w-full items-center justify-between gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+          >
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
+              <img
+                src={userAvatarSrc}
+                alt={displayName}
+                className="size-9 rounded-full object-cover shrink-0 ring-1 ring-border/60"
+              />
+              <div className="min-w-0 flex-1 text-left">
+                <div className="truncate text-sm font-medium text-foreground leading-tight">
+                  {displayName}
+                </div>
+                <div className="truncate text-xs text-muted-foreground leading-tight mt-0.5">
+                  Free
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveModal("subscriptions");
+              }}
+              className="shrink-0 rounded-full bg-[#27272a] hover:bg-[#3f3f46] text-white border border-white/10 px-3.5 py-1 text-xs font-medium transition-all shadow-xs cursor-pointer active:scale-95"
+            >
+              Upgrade
+            </button>
+          </div>
+        ) : (
+          <Button
+            className="w-full justify-center gap-2 rounded-xl font-medium cursor-pointer shadow-xs"
+            onClick={() => setAuthDialogOpen(true)}
+          >
+            <LogIn className="size-4" />
+            Sign in
+          </Button>
+        )}
       </div>
 
       {/* ---------------- Modals for all options ---------------- */}
@@ -1300,22 +1496,15 @@ export function SidebarNav({
             {user && (
               <div className="flex items-center gap-3 rounded-lg border border-border/80 bg-background/50 p-3">
                 <img
-                  src={
-                    typeof avatar === "string"
-                      ? avatar
-                      : (avatar as { src?: string })?.src ||
-                        "/profile-avatar.jpg"
-                  }
+                  src={userAvatarSrc}
                   alt="Avatar"
                   className="size-10 rounded-full object-cover"
                 />
                 <div className="min-w-0 flex-1">
                   <div className="truncate font-semibold text-foreground">
-                    {user.user_metadata["full_name"] ??
-                      user.email?.split("@")[0] ??
-                      "Your Profile"}
+                    {displayName}
                   </div>
-                  <div className="truncate text-muted-foreground">{user.email}</div>
+                  <div className="truncate text-muted-foreground">{displayEmail}</div>
                 </div>
               </div>
             )}
@@ -1329,8 +1518,8 @@ export function SidebarNav({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={toggleDark}
-                className="h-8 gap-1.5"
+                onClick={() => toggleDark()}
+                className="h-8 gap-1.5 cursor-pointer"
               >
                 {dark ? <Moon className="size-3.5" /> : <Sun className="size-3.5" />}
                 {dark ? "Dark" : "Light"}
@@ -1350,13 +1539,34 @@ export function SidebarNav({
                 Sign out
               </Button>
             ) : (
-              <p className="text-center text-muted-foreground">
-                Sign in from the header to sync account settings.
-              </p>
+              <div className="space-y-2 text-center">
+                <p className="text-muted-foreground">
+                  Sign in to sync account preferences & conversation history.
+                </p>
+                <Button
+                  className="w-full font-medium"
+                  onClick={() => {
+                    setActiveModal(null);
+                    setAuthDialogOpen(true);
+                  }}
+                >
+                  <LogIn className="size-4 mr-2" />
+                  Sign In / Create Account
+                </Button>
+              </div>
             )}
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Auth Dialog */}
+      <AuthDialog open={authDialogOpen} onOpenChange={setAuthDialogOpen} />
+
+      {/* Share Website Dialog matching Image 3 */}
+      <ShareWebsiteDialog
+        open={shareDialogOpen}
+        onOpenChange={setShareDialogOpen}
+      />
     </aside>
   );
 }
