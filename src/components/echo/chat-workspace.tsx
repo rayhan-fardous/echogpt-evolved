@@ -169,7 +169,7 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
   };
   return (
     <div className="soft-grid flex h-dvh min-w-0 bg-background text-foreground">
-      <aside className="hidden w-72 shrink-0 lg:block">
+      <aside className="hidden w-[296px] shrink-0 lg:block">
         <SidebarNav threads={threads} user={user} currentThreadId={threadId} />
       </aside>
       <main className="relative flex min-w-0 flex-1 flex-col">

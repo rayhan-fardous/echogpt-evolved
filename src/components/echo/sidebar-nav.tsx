@@ -51,7 +51,7 @@ export type ThreadSummary = { id: string; title: string; updated_at: string };
 
 /* ---------------- Custom SVGs matching the user screenshots exactly ---------------- */
 
-function ImageStudioIcon({ className = "size-5" }: { className?: string }) {
+function ImageStudioIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -69,7 +69,7 @@ function ImageStudioIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function VideoStudioIcon({ className = "size-5" }: { className?: string }) {
+function VideoStudioIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -90,7 +90,7 @@ function VideoStudioIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function CompareIcon({ className = "size-5" }: { className?: string }) {
+function CompareIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -108,7 +108,7 @@ function CompareIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function ConnectorsIcon({ className = "size-5" }: { className?: string }) {
+function ConnectorsIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -128,7 +128,7 @@ function ConnectorsIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function HistoryBubbleIcon({ className = "size-5" }: { className?: string }) {
+function HistoryBubbleIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -144,7 +144,7 @@ function HistoryBubbleIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function BasketIcon({ className = "size-5" }: { className?: string }) {
+function BasketIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -165,7 +165,7 @@ function BasketIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function TasksGridIcon({ className = "size-5" }: { className?: string }) {
+function TasksGridIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -184,7 +184,7 @@ function TasksGridIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function JobAnalysisIcon({ className = "size-5" }: { className?: string }) {
+function JobAnalysisIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -203,7 +203,7 @@ function JobAnalysisIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function SopBuilderIcon({ className = "size-5" }: { className?: string }) {
+function SopBuilderIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -221,7 +221,7 @@ function SopBuilderIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function SupportChatIcon({ className = "size-5" }: { className?: string }) {
+function SupportChatIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -239,7 +239,7 @@ function SupportChatIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function NewsletterIcon({ className = "size-5" }: { className?: string }) {
+function NewsletterIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -256,7 +256,7 @@ function NewsletterIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function SubscriptionsIcon({ className = "size-5" }: { className?: string }) {
+function SubscriptionsIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -273,7 +273,7 @@ function SubscriptionsIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function ApiPlatformIcon({ className = "size-5" }: { className?: string }) {
+function ApiPlatformIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -298,7 +298,7 @@ function ApiPlatformIcon({ className = "size-5" }: { className?: string }) {
   );
 }
 
-function DiscordIcon({ className = "size-5" }: { className?: string }) {
+function DiscordIcon({ className = "size-[22px]" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={`text-[#5865F2] ${className}`}>
       <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
@@ -324,6 +324,9 @@ export function SidebarNav({
   const router = useRouter();
   const pathname = usePathname();
   const isSearchActive = pathname === "/search";
+  const isImageStudioActive = pathname === "/image-studio";
+  const isVideoStudioActive = pathname === "/video-studio";
+  const isCompareActive = pathname === "/compare";
   const [search, setSearch] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -435,8 +438,8 @@ export function SidebarNav({
           }}
           className="flex items-center gap-2.5 transition-opacity hover:opacity-85 text-left"
         >
-          <BrandMark className="size-8" />
-          <span className="font-heading text-lg font-semibold tracking-tight">
+          <BrandMark className="size-[34px]" />
+          <span className="font-heading text-[19px] font-semibold tracking-tight">
             EchoGPT
           </span>
         </button>
@@ -452,21 +455,21 @@ export function SidebarNav({
           }}
           className="flex size-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-black/[0.05] hover:text-foreground dark:hover:bg-white/[0.08] lg:hidden"
         >
-          <X className="size-5" />
+          <X className="size-[22px]" />
         </button>
       </div>
 
       {/* New Chat button */}
       <div className="px-3.5 pb-2.5">
         <Button
-          className="h-10 w-full justify-start gap-2.5 rounded-xl font-medium shadow-sm transition-all"
+          className="h-10.5 w-full justify-start gap-2.5 rounded-xl text-[15px] font-medium shadow-sm transition-all"
           onClick={() => {
             router.push(`/chat/${crypto.randomUUID()}`);
             onSelect?.();
             onClose?.();
           }}
         >
-          <SquarePen className="size-4" />
+          <SquarePen className="size-[19px]" />
           <span>New Chat</span>
         </Button>
       </div>
@@ -481,21 +484,21 @@ export function SidebarNav({
             onSelect?.();
             onClose?.();
           }}
-          className={`group flex h-10 w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium transition-all ${
+          className={`group flex h-10.5 w-full items-center gap-2.5 rounded-xl px-3 text-left text-[15px] font-medium transition-all ${
             isSearchActive
               ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
               : "text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
           }`}
         >
           <Search
-            className={`size-4 transition-colors shrink-0 ${
+            className={`size-[19px] transition-colors shrink-0 ${
               isSearchActive
                 ? "text-primary"
                 : "text-muted-foreground/90 group-hover:text-foreground"
             }`}
           />
           <span className="truncate">Search chat</span>
-          <kbd className="ml-auto pointer-events-none hidden h-5 select-none items-center gap-1 rounded border border-border/60 bg-muted/40 px-1.5 font-mono text-[10px] font-medium text-muted-foreground/80 sm:inline-flex">
+          <kbd className="ml-auto pointer-events-none hidden h-5 select-none items-center gap-1 rounded border border-border/60 bg-muted/40 px-1.5 font-mono text-[11px] font-medium text-muted-foreground/80 sm:inline-flex">
             ⌘K
           </kbd>
         </button>
@@ -508,7 +511,7 @@ export function SidebarNav({
       >
         {/* Section 1: ENGAGEMENT */}
         <div className="mb-2">
-          <p className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+          <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
             Engagement
           </p>
 
@@ -517,12 +520,26 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("image-studio")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/image-studio");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isImageStudioActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <ImageStudioIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <ImageStudioIcon
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isImageStudioActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">Image Studio</span>
-                <span className="ml-auto rounded-md bg-[#EDE9FE] px-2 py-0.5 text-[10px] font-bold tracking-wide text-[#7C3AED] dark:bg-[#341B5E]/70 dark:text-[#C4B5FD]">
+                <span className="ml-auto rounded-md bg-[#EDE9FE] px-2 py-0.5 text-[11px] font-bold tracking-wide text-[#7C3AED] dark:bg-[#341B5E]/70 dark:text-[#C4B5FD]">
                   PRO
                 </span>
               </button>
@@ -532,12 +549,26 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("video-studio")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/video-studio");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isVideoStudioActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <VideoStudioIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <VideoStudioIcon
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isVideoStudioActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">Video Studio</span>
-                <span className="ml-auto rounded-md bg-[#EDE9FE] px-2 py-0.5 text-[10px] font-bold tracking-wide text-[#7C3AED] dark:bg-[#341B5E]/70 dark:text-[#C4B5FD]">
+                <span className="ml-auto rounded-md bg-[#EDE9FE] px-2 py-0.5 text-[11px] font-bold tracking-wide text-[#7C3AED] dark:bg-[#341B5E]/70 dark:text-[#C4B5FD]">
                   PRO
                 </span>
               </button>
@@ -547,10 +578,24 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("compare")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/compare");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isCompareActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <CompareIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <CompareIcon
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isCompareActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">Compare</span>
               </button>
             </li>
@@ -560,9 +605,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("connectors")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <ConnectorsIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <ConnectorsIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">Connectors</span>
               </button>
             </li>
@@ -572,16 +617,16 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setHistoryOpen(!historyOpen)}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <HistoryBubbleIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <HistoryBubbleIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">History</span>
                 {filteredThreads.length > 0 && (
                   <span className="ml-auto text-xs text-muted-foreground/70">
                     {historyOpen ? (
-                      <ChevronDown className="size-4" />
+                      <ChevronDown className="size-[18px]" />
                     ) : (
-                      <ChevronRight className="size-4" />
+                      <ChevronRight className="size-[18px]" />
                     )}
                   </span>
                 )}
@@ -607,7 +652,7 @@ export function SidebarNav({
                             router.push(`/chat/${thread.id}`);
                             onSelect?.();
                           }}
-                          className={`flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-left text-xs transition-colors ${
+                          className={`flex w-full items-center justify-between gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px] transition-colors ${
                             isActive
                               ? "bg-accent font-semibold text-accent-foreground"
                               : "text-muted-foreground hover:bg-accent/60 hover:text-foreground"
@@ -615,11 +660,11 @@ export function SidebarNav({
                         >
                           <div className="flex min-w-0 items-center gap-1.5">
                             {isPinned && (
-                              <Pin className="size-3 text-primary rotate-45 shrink-0" />
+                              <Pin className="size-3.5 text-primary rotate-45 shrink-0" />
                             )}
                             <span className="truncate">{thread.title}</span>
                           </div>
-                          <span className="shrink-0 text-[10px] opacity-70">
+                          <span className="shrink-0 text-[11px] opacity-70">
                             {new Date(thread.updated_at).toLocaleDateString(
                               undefined,
                               {
@@ -641,9 +686,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("store")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <BasketIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <BasketIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">Store</span>
               </button>
             </li>
@@ -653,9 +698,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("ai-tasks")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <TasksGridIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <TasksGridIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">AI Tasks</span>
               </button>
             </li>
@@ -665,9 +710,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("job-analysis")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <JobAnalysisIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <JobAnalysisIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">AI Job Analysis</span>
               </button>
             </li>
@@ -677,9 +722,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("sop-builder")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <SopBuilderIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <SopBuilderIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">AI SOP Builder</span>
               </button>
             </li>
@@ -691,7 +736,7 @@ export function SidebarNav({
 
         {/* Section 2: HELP & SUPPORT */}
         <div className="mb-2">
-          <p className="px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+          <p className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
             Help & Support
           </p>
 
@@ -701,9 +746,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("support")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <SupportChatIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <SupportChatIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">Support</span>
               </button>
             </li>
@@ -713,9 +758,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("newsletter")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <NewsletterIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <NewsletterIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">Newsletter</span>
               </button>
             </li>
@@ -725,9 +770,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("subscriptions")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <SubscriptionsIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <SubscriptionsIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">Subscriptions</span>
               </button>
             </li>
@@ -737,9 +782,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("api-platform")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <ApiPlatformIcon className="size-5 text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <ApiPlatformIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">API Platform</span>
               </button>
             </li>
@@ -749,9 +794,9 @@ export function SidebarNav({
               <button
                 type="button"
                 onClick={() => setActiveModal("discord")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
               >
-                <DiscordIcon className="size-5 shrink-0" />
+                <DiscordIcon className="size-[22px] shrink-0" />
                 <span className="truncate">Discord</span>
               </button>
             </li>
@@ -766,9 +811,9 @@ export function SidebarNav({
           <PopoverTrigger asChild>
             <button
               type="button"
-              className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-sm font-medium text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+              className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[15px] font-medium text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
             >
-              <Settings className="size-4 text-muted-foreground shrink-0" />
+              <Settings className="size-[19px] text-muted-foreground shrink-0" />
               <span>Settings</span>
             </button>
           </PopoverTrigger>
@@ -777,15 +822,15 @@ export function SidebarNav({
             side="top"
             align="start"
             sideOffset={8}
-            className="w-64 p-0 overflow-hidden rounded-2xl border border-border/80 bg-background text-foreground shadow-2xl mb-1"
+            className="w-68 p-0 overflow-hidden rounded-2xl border border-border/80 bg-background text-foreground shadow-2xl mb-1"
           >
             {/* User Info Header only if authenticated */}
             {user && (
               <div className="px-4 py-3 border-b border-border/50">
-                <div className="font-semibold text-sm text-foreground truncate">
+                <div className="font-semibold text-[15px] text-foreground truncate">
                   {displayName}
                 </div>
-                <div className="text-xs text-muted-foreground truncate mt-0.5">
+                <div className="text-[13px] text-muted-foreground truncate mt-0.5">
                   {displayEmail}
                 </div>
               </div>
@@ -800,9 +845,9 @@ export function SidebarNav({
                   setProfilePopoverOpen(false);
                   setActiveModal("subscriptions");
                 }}
-                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-[15px] text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
               >
-                <Star className="size-4 shrink-0" />
+                <Star className="size-[18px] shrink-0" />
                 <span className="font-medium">Upgrade</span>
               </button>
 
@@ -813,9 +858,9 @@ export function SidebarNav({
                   setProfilePopoverOpen(false);
                   setActiveModal("settings");
                 }}
-                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-[15px] text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
               >
-                <Settings className="size-4 shrink-0" />
+                <Settings className="size-[18px] shrink-0" />
                 <span className="font-medium">Preferences</span>
               </button>
 
@@ -826,9 +871,9 @@ export function SidebarNav({
                   setProfilePopoverOpen(false);
                   setShareDialogOpen(true);
                 }}
-                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-[15px] text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
               >
-                <Share2 className="size-4 shrink-0" />
+                <Share2 className="size-[18px] shrink-0" />
                 <span className="font-medium">Share Website</span>
               </button>
             </div>
@@ -848,13 +893,13 @@ export function SidebarNav({
                     toggleDark();
                   }
                 }}
-                className="flex items-center justify-between rounded-xl px-2.5 py-2 text-sm text-foreground/90 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer transition-colors select-none"
+                className="flex items-center justify-between rounded-xl px-2.5 py-2 text-[15px] text-foreground/90 hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer transition-colors select-none"
               >
                 <div className="flex items-center gap-3">
                   {dark ? (
-                    <Moon className="size-4 shrink-0 text-primary" />
+                    <Moon className="size-[18px] shrink-0 text-primary" />
                   ) : (
-                    <Sun className="size-4 shrink-0 text-muted-foreground" />
+                    <Sun className="size-[18px] shrink-0 text-muted-foreground" />
                   )}
                   <span className="font-medium">Dark Mode</span>
                 </div>
@@ -872,23 +917,23 @@ export function SidebarNav({
 
             {/* TERMS AND CONDITIONS */}
             <div className="p-1.5 space-y-0.5">
-              <div className="px-2.5 pt-1.5 pb-1 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase select-none">
+              <div className="px-2.5 pt-1.5 pb-1 text-xs font-semibold tracking-wider text-muted-foreground uppercase select-none">
                 TERMS AND CONDITIONS
               </div>
               <Link
                 href="/terms-of-use"
                 onClick={() => setProfilePopoverOpen(false)}
-                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-[15px] text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
               >
-                <ClipboardList className="size-4 shrink-0 text-muted-foreground" />
+                <ClipboardList className="size-[18px] shrink-0 text-muted-foreground" />
                 <span className="font-medium">Terms of Use</span>
               </Link>
               <Link
                 href="/privacy-policy"
                 onClick={() => setProfilePopoverOpen(false)}
-                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-[15px] text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
               >
-                <ShieldCheck className="size-4 shrink-0 text-muted-foreground" />
+                <ShieldCheck className="size-[18px] shrink-0 text-muted-foreground" />
                 <span className="font-medium">Privacy Policy</span>
               </Link>
             </div>
@@ -904,9 +949,9 @@ export function SidebarNav({
                       setProfilePopoverOpen(false);
                       await supabase.auth.signOut();
                     }}
-                    className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-sm font-medium text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                    className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-[15px] font-medium text-rose-500 hover:bg-rose-500/10 transition-colors cursor-pointer"
                   >
-                    <LogOut className="size-4 shrink-0" />
+                    <LogOut className="size-[18px] shrink-0" />
                     <span>Sign out</span>
                   </button>
                 </div>
@@ -925,13 +970,13 @@ export function SidebarNav({
               <img
                 src={userAvatarSrc}
                 alt={displayName}
-                className="size-9 rounded-full object-cover shrink-0 ring-1 ring-border/60"
+                className="size-10 rounded-full object-cover shrink-0 ring-1 ring-border/60"
               />
               <div className="min-w-0 flex-1 text-left">
-                <div className="truncate text-sm font-medium text-foreground leading-tight">
+                <div className="truncate text-[15px] font-medium text-foreground leading-tight">
                   {displayName}
                 </div>
-                <div className="truncate text-xs text-muted-foreground leading-tight mt-0.5">
+                <div className="truncate text-[13px] text-muted-foreground leading-tight mt-0.5">
                   Free
                 </div>
               </div>
@@ -942,17 +987,17 @@ export function SidebarNav({
                 e.stopPropagation();
                 setActiveModal("subscriptions");
               }}
-              className="shrink-0 rounded-full bg-[#27272a] hover:bg-[#3f3f46] text-white border border-white/10 px-3.5 py-1 text-xs font-medium transition-all shadow-xs cursor-pointer active:scale-95"
+              className="shrink-0 rounded-full bg-[#27272a] hover:bg-[#3f3f46] text-white border border-white/10 px-3.5 py-1.5 text-[13px] font-medium transition-all shadow-xs cursor-pointer active:scale-95"
             >
               Upgrade
             </button>
           </div>
         ) : (
           <Button
-            className="w-full justify-center gap-2 rounded-xl font-medium cursor-pointer shadow-xs"
+            className="h-10.5 w-full justify-center gap-2 rounded-xl text-[15px] font-medium cursor-pointer shadow-xs"
             onClick={() => setAuthDialogOpen(true)}
           >
-            <LogIn className="size-4" />
+            <LogIn className="size-[19px]" />
             Sign in
           </Button>
         )}
