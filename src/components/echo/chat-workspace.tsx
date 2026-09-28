@@ -26,7 +26,7 @@ import {
 import { BrandMark } from "./brand-mark";
 import { ChatInputBox } from "./chat-input-box";
 import { SidebarNav, type ThreadSummary } from "./sidebar-nav";
-import { DEFAULT_MODELS, type AIModel } from "@/lib/models-data";
+import { DEFAULT_MODELS, ALL_MODELS, type AIModel } from "@/lib/models-data";
 import { supabase } from "@/integrations/supabase/client";
 import { saveThreadMetadata } from "@/lib/thread-storage";
 
@@ -45,6 +45,21 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
   const [user, setUser] = useState<User | null>(null);
   const [status, setStatus] = useState<"ready" | "submitted">("ready");
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const modelParam = params.get("model") || localStorage.getItem("echo-selected-model");
+      if (modelParam) {
+        const found = ALL_MODELS.find((m) => m.id === modelParam);
+        if (found) {
+          setSelectedModel(found);
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, []);
   useEffect(() => {
     let active = true;
     const loadUser = async () => {

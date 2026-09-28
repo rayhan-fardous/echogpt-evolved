@@ -327,6 +327,8 @@ export function SidebarNav({
   const isImageStudioActive = pathname === "/image-studio";
   const isVideoStudioActive = pathname === "/video-studio";
   const isCompareActive = pathname === "/compare";
+  const isConnectorsActive = pathname === "/connectors";
+  const isStoreActive = pathname === "/store";
   const [search, setSearch] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -604,10 +606,24 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("connectors")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/connectors");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isConnectorsActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <ConnectorsIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <ConnectorsIcon
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isConnectorsActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">Connectors</span>
               </button>
             </li>
@@ -685,10 +701,24 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("store")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/store");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isStoreActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <BasketIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <BasketIcon
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isStoreActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">Store</span>
               </button>
             </li>
