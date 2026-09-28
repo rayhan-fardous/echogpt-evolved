@@ -329,6 +329,7 @@ export function SidebarNav({
   const isCompareActive = pathname === "/compare";
   const isConnectorsActive = pathname === "/connectors";
   const isStoreActive = pathname === "/store";
+  const isResumeActive = pathname === "/resume";
   const [search, setSearch] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -739,10 +740,24 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("job-analysis")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/resume");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isResumeActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <JobAnalysisIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <JobAnalysisIcon
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isResumeActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">AI Job Analysis</span>
               </button>
             </li>
@@ -1309,38 +1324,6 @@ export function SidebarNav({
         </DialogContent>
       </Dialog>
 
-      {/* AI Job Analysis Modal */}
-      <Dialog
-        open={activeModal === "job-analysis"}
-        onOpenChange={(open) => !open && setActiveModal(null)}
-      >
-        <DialogContent className="glass-panel sm:max-w-md">
-          <DialogHeader>
-            <div className="flex items-center gap-2 text-primary">
-              <JobAnalysisIcon className="size-6" />
-              <DialogTitle className="font-heading text-xl">
-                AI Job Analysis
-              </DialogTitle>
-            </div>
-            <DialogDescription>
-              Match resumes against job descriptions, generate gap analysis,
-              and craft tailored application materials.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3 pt-2 text-xs">
-            <Input placeholder="Paste Job Description URL or text..." />
-            <div className="rounded-lg border-2 border-dashed border-border/80 p-5 text-center text-muted-foreground">
-              Drop resume PDF or DOCX here to analyze fit score
-            </div>
-            <Button
-              className="w-full font-medium"
-              onClick={() => setActiveModal(null)}
-            >
-              Analyze Job Fit
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
 
       {/* AI SOP Builder Modal */}
       <Dialog
