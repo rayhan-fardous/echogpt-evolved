@@ -24,6 +24,7 @@ import {
   Pin,
   ClipboardList,
   ShieldCheck,
+  LayoutGrid,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -330,6 +331,7 @@ export function SidebarNav({
   const isConnectorsActive = pathname === "/connectors";
   const isStoreActive = pathname === "/store";
   const isResumeActive = pathname === "/resume";
+  const isTasksActive = pathname === "/tasks";
   const [search, setSearch] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -728,10 +730,24 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("ai-tasks")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/tasks");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isTasksActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <TasksGridIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <LayoutGrid
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isTasksActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">AI Tasks</span>
               </button>
             </li>
@@ -1278,51 +1294,7 @@ export function SidebarNav({
         </DialogContent>
       </Dialog>
 
-      {/* AI Tasks Modal */}
-      <Dialog
-        open={activeModal === "ai-tasks"}
-        onOpenChange={(open) => !open && setActiveModal(null)}
-      >
-        <DialogContent className="glass-panel sm:max-w-md">
-          <DialogHeader>
-            <div className="flex items-center gap-2 text-primary">
-              <TasksGridIcon className="size-6" />
-              <DialogTitle className="font-heading text-xl">
-                AI Tasks & Automations
-              </DialogTitle>
-            </div>
-            <DialogDescription>
-              Run scheduled autonomous tasks, data pipelines, and batch
-              synthesizing.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-2 pt-2 text-xs">
-            {[
-              "Automated Weekly Research Briefing",
-              "Customer Feedback Sentiment Aggregation",
-              "Daily Competitor Pricing Scan",
-              "Repository Code Quality Audit",
-            ].map((task) => (
-              <div
-                key={task}
-                className="flex items-center justify-between rounded-lg border border-border/70 bg-background/50 p-2.5"
-              >
-                <span className="font-medium text-foreground">{task}</span>
-                <span className="text-[10px] text-muted-foreground font-mono bg-accent/60 px-2 py-0.5 rounded">
-                  Ready
-                </span>
-              </div>
-            ))}
-            <Button
-              className="w-full mt-2 font-medium"
-              onClick={() => setActiveModal(null)}
-            >
-              <Plus className="size-4 mr-1.5" />
-              Create New Task
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+
 
 
       {/* AI SOP Builder Modal */}

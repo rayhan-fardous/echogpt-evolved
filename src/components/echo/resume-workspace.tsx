@@ -334,13 +334,13 @@ ${result.tailoringAdvice.map((a) => `- ${a}`).join("\n")}
         <div className="mx-auto flex w-full max-w-4xl flex-col px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
           {/* Header Title Matching Reference */}
           <div className="mb-8 text-center sm:mb-10">
-            <h1 className="flex flex-wrap items-center justify-center gap-2 text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl text-foreground">
+            <h1 className="flex flex-wrap items-center justify-center gap-2 font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               <span>EchoGPT – AI Job Insight</span>
-              <span className="inline-flex items-center rounded-2xl bg-[#7c3aed] px-3.5 py-1 text-2xl font-bold text-white shadow-md sm:text-3xl">
+              <span className="inline-flex items-center rounded-2xl bg-[#7c3aed] px-3 py-0.5 text-xl font-bold text-white shadow-md sm:text-2xl">
                 Assistant
               </span>
             </h1>
-            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
+            <p className="mx-auto mt-2.5 max-w-xl text-sm text-muted-foreground/80 sm:text-base leading-relaxed">
               Analyze job descriptions, optimize your resume for ATS algorithms, and practice tailored interview questions in seconds.
             </p>
           </div>
