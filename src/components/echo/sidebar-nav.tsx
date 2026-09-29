@@ -334,6 +334,9 @@ export function SidebarNav({
   const isResumeActive = pathname === "/resume";
   const isTasksActive = pathname === "/tasks";
   const isSopActive = pathname === "/sop";
+  const isSupportActive = pathname === "/support";
+  const isNewsletterActive = pathname === "/newsletter";
+  const isSubscriptionsActive = pathname === "/subscriptions";
   const [search, setSearch] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -822,10 +825,24 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("support")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/support");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isSupportActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <SupportChatIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <SupportChatIcon
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isSupportActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">Support</span>
               </button>
             </li>
@@ -834,10 +851,24 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("newsletter")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/newsletter");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isNewsletterActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <NewsletterIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <NewsletterIcon
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isNewsletterActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">Newsletter</span>
               </button>
             </li>
@@ -846,24 +877,44 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("subscriptions")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/subscriptions");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isSubscriptionsActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <SubscriptionsIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <SubscriptionsIcon
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isSubscriptionsActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">Subscriptions</span>
               </button>
             </li>
 
             {/* 4. API Platform */}
             <li>
-              <button
-                type="button"
-                onClick={() => setActiveModal("api-platform")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+              <a
+                href="https://platform.echogpt.live/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06] cursor-pointer"
               >
                 <ApiPlatformIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
                 <span className="truncate">API Platform</span>
-              </button>
+                <ExternalLink className="ml-auto size-3.5 text-muted-foreground/60 transition-opacity group-hover:text-foreground shrink-0" />
+              </a>
             </li>
 
             {/* 5. Discord */}
@@ -920,7 +971,9 @@ export function SidebarNav({
                 type="button"
                 onClick={() => {
                   setProfilePopoverOpen(false);
-                  setActiveModal("subscriptions");
+                  router.push("/subscriptions");
+                  onSelect?.();
+                  onClose?.();
                 }}
                 className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-[15px] text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
               >
@@ -1062,7 +1115,9 @@ export function SidebarNav({
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                setActiveModal("subscriptions");
+                router.push("/subscriptions");
+                onSelect?.();
+                onClose?.();
               }}
               className="shrink-0 rounded-full bg-[#27272a] hover:bg-[#3f3f46] text-white border border-white/10 px-3.5 py-1.5 text-[13px] font-medium transition-all shadow-xs cursor-pointer active:scale-95"
             >
@@ -1441,38 +1496,7 @@ export function SidebarNav({
         </DialogContent>
       </Dialog>
 
-      {/* API Platform Modal */}
-      <Dialog
-        open={activeModal === "api-platform"}
-        onOpenChange={(open) => !open && setActiveModal(null)}
-      >
-        <DialogContent className="glass-panel sm:max-w-md">
-          <DialogHeader>
-            <div className="flex items-center gap-2 text-primary">
-              <ApiPlatformIcon className="size-6" />
-              <DialogTitle className="font-heading text-xl">
-                EchoGPT API Platform
-              </DialogTitle>
-            </div>
-            <DialogDescription>
-              Build with unified access to all AI models through OpenAI-compatible
-              REST endpoints.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3 pt-2 text-xs font-mono">
-            <div className="rounded-lg bg-black/80 dark:bg-black/90 p-3 text-[11px] text-emerald-400 overflow-x-auto">
-              curl https://api.echogpt.ai/v1/chat/completions \<br />
-              &nbsp;&nbsp;-H &quot;Authorization: Bearer echo_live_...&quot;
-            </div>
-            <Button
-              className="w-full font-sans font-medium"
-              onClick={() => setActiveModal(null)}
-            >
-              Generate New API Key
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+
 
       {/* Discord Modal */}
       <Dialog
