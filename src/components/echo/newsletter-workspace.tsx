@@ -22,6 +22,7 @@ import {
   Star,
   ExternalLink,
 } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -177,9 +178,25 @@ export function NewsletterWorkspace() {
             </div>
 
             {/* Hero Section */}
-            <div className="relative pt-6 pb-12 sm:pt-10 sm:pb-16 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              className="relative pt-6 pb-12 sm:pt-10 sm:pb-16 text-center"
+            >
               {/* Subtle ambient background glow */}
-              <div className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 h-72 w-96 rounded-full bg-gradient-to-tr from-purple-500/15 via-indigo-500/10 to-transparent blur-3xl -z-10" />
+              <motion.div
+                animate={{
+                  scale: [1, 1.06, 1],
+                  opacity: [0.8, 1, 0.8],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 h-72 w-96 rounded-full bg-gradient-to-tr from-purple-500/15 via-indigo-500/10 to-transparent blur-3xl -z-10"
+              />
 
               <h1 className="font-heading text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
                 Elevate Your{" "}
@@ -195,33 +212,48 @@ export function NewsletterWorkspace() {
 
               {/* Form Container */}
               <div className="mt-9 mx-auto max-w-md">
-                {subscribed ? (
-                  <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 text-center shadow-lg backdrop-blur-sm animate-in fade-in zoom-in-95 duration-300">
-                    <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500">
-                      <CheckCircle2 className="size-6" />
-                    </div>
-                    <h3 className="mt-3 text-lg font-semibold text-foreground">
-                      You&apos;re Subscribed!
-                    </h3>
-                    <p className="mt-1.5 text-xs text-muted-foreground">
-                      We&apos;ve sent the latest edition to{" "}
-                      <span className="font-semibold text-foreground">{email}</span>.
-                      Check your inbox or spam folder!
-                    </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSubscribed(false)}
-                      className="mt-4 text-xs rounded-xl"
+                <AnimatePresence mode="wait">
+                  {subscribed ? (
+                    <motion.div
+                      key="subscribed"
+                      initial={{ opacity: 0, scale: 0.92 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.92 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                      className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-6 text-center shadow-lg backdrop-blur-sm"
                     >
-                      Subscribe another email
-                    </Button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-3.5">
-                    {/* Input Field with Mail Icon */}
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-muted-foreground/80">
+                      <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-500">
+                        <CheckCircle2 className="size-6" />
+                      </div>
+                      <h3 className="mt-3 text-lg font-semibold text-foreground">
+                        You&apos;re Subscribed!
+                      </h3>
+                      <p className="mt-1.5 text-xs text-muted-foreground">
+                        We&apos;ve sent the latest edition to{" "}
+                        <span className="font-semibold text-foreground">{email}</span>.
+                        Check your inbox or spam folder!
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setSubscribed(false)}
+                        className="mt-4 text-xs rounded-xl cursor-pointer"
+                      >
+                        Subscribe another email
+                      </Button>
+                    </motion.div>
+                  ) : (
+                    <motion.form
+                      key="form"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onSubmit={handleSubmit}
+                      className="space-y-3.5"
+                    >
+                      {/* Input Field with Mail Icon */}
+                      <div className="relative">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-muted-foreground/80">
                         <Mail className="size-5" />
                       </div>
                       <input
@@ -252,8 +284,9 @@ export function NewsletterWorkspace() {
                         </>
                       )}
                     </button>
-                  </form>
-                )}
+                  </motion.form>
+                  )}
+                </AnimatePresence>
 
                 {/* Trust Badges matching screenshot */}
                 <div className="mt-6 flex items-center justify-center gap-6 sm:gap-10 text-[11px] sm:text-xs font-semibold tracking-wider text-muted-foreground uppercase select-none">
@@ -271,12 +304,16 @@ export function NewsletterWorkspace() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Core Feature Pillars Grid matching screenshot */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6 pt-2 pb-14">
               {/* Card 1: Industry Trends */}
-              <div className="group relative rounded-2xl border border-border/80 bg-card/60 p-6 sm:p-7 backdrop-blur-xs transition-all hover:border-primary/40 hover:shadow-lg dark:hover:shadow-primary/5">
+              <motion.div
+                whileHover={{ y: -4, scale: 1.015 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="group relative rounded-2xl border border-border/80 bg-card/60 p-6 sm:p-7 backdrop-blur-xs transition-colors hover:border-primary/40 hover:shadow-lg dark:hover:shadow-primary/5 cursor-pointer"
+              >
                 <div className="mb-4 inline-flex size-11 items-center justify-center rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400">
                   <TrendingUp className="size-5" />
                 </div>
@@ -293,10 +330,14 @@ export function NewsletterWorkspace() {
                   <span>•</span>
                   <span>5-min Read</span>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Card 2: Power Usage */}
-              <div className="group relative rounded-2xl border border-border/80 bg-card/60 p-6 sm:p-7 backdrop-blur-xs transition-all hover:border-primary/40 hover:shadow-lg dark:hover:shadow-primary/5">
+              <motion.div
+                whileHover={{ y: -4, scale: 1.015 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="group relative rounded-2xl border border-border/80 bg-card/60 p-6 sm:p-7 backdrop-blur-xs transition-colors hover:border-primary/40 hover:shadow-lg dark:hover:shadow-primary/5 cursor-pointer"
+              >
                 <div className="mb-4 inline-flex size-11 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
                   <Cpu className="size-5" />
                 </div>
@@ -313,10 +354,14 @@ export function NewsletterWorkspace() {
                   <span>•</span>
                   <span>Actionable</span>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Card 3: Early Access */}
-              <div className="group relative rounded-2xl border border-border/80 bg-card/60 p-6 sm:p-7 backdrop-blur-xs transition-all hover:border-primary/40 hover:shadow-lg dark:hover:shadow-primary/5">
+              <motion.div
+                whileHover={{ y: -4, scale: 1.015 }}
+                transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                className="group relative rounded-2xl border border-border/80 bg-card/60 p-6 sm:p-7 backdrop-blur-xs transition-colors hover:border-primary/40 hover:shadow-lg dark:hover:shadow-primary/5 cursor-pointer"
+              >
                 <div className="mb-4 inline-flex size-11 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
                   <Zap className="size-5" />
                 </div>
@@ -333,7 +378,7 @@ export function NewsletterWorkspace() {
                   <span>•</span>
                   <span>Product Roadmap</span>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
             {/* Featured Recent Editions Archive */}

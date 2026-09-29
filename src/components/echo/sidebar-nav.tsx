@@ -472,7 +472,7 @@ export function SidebarNav({
       {/* New Chat button */}
       <div className="px-3.5 pb-2.5">
         <Button
-          className="h-10.5 w-full justify-start gap-2.5 rounded-xl text-[15px] font-medium shadow-sm transition-all"
+          className="h-10.5 w-full justify-start gap-2.5 rounded-xl text-[15px] font-medium shadow-sm transition-all active:scale-[0.98] cursor-pointer"
           onClick={() => {
             router.push(`/chat/${crypto.randomUUID()}`);
             onSelect?.();
@@ -494,7 +494,7 @@ export function SidebarNav({
             onSelect?.();
             onClose?.();
           }}
-          className={`group flex h-10.5 w-full items-center gap-2.5 rounded-xl px-3 text-left text-[15px] font-medium transition-all ${
+          className={`group flex h-10.5 w-full items-center gap-2.5 rounded-xl px-3 text-left text-[15px] font-medium transition-all active:scale-[0.98] cursor-pointer ${
             isSearchActive
               ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
               : "text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"

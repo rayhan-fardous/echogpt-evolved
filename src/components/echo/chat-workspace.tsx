@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import type { User } from "@supabase/supabase-js";
 import { Copy, Menu } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { StaggerContainer, StaggerItem } from "@/components/motion/motion-view";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -222,7 +224,12 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
         <Conversation className="min-h-0">
           <ConversationContent className="mx-auto w-full max-w-3xl gap-8 px-4 pb-8 pt-10 sm:px-8">
             {messages.length === 0 ? (
-              <section className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center py-12">
+              <motion.section
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                className="mx-auto flex w-full max-w-2xl flex-1 flex-col justify-center py-12"
+              >
                 <div className="mb-10">
                   <BrandMark className="mb-5 size-12" />
                   <h1 className="font-heading text-4xl font-semibold sm:text-5xl">
@@ -233,42 +240,63 @@ export function ChatWorkspace({ threadId }: { threadId?: string }) {
                     steps.
                   </p>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2">
+                <StaggerContainer className="grid gap-3 sm:grid-cols-2" staggerDelay={0.06}>
                   {starters.map((s) => (
-                    <Button
-                      key={s}
-                      variant="outline"
-                      className="glass-panel h-auto min-h-16 justify-start whitespace-normal p-4 sm:p-5 text-left rounded-2xl border-border/80 hover:border-primary/40 transition-all shadow-xs"
-                      onClick={() => send({ text: s })}
-                    >
-                      {s}
-                    </Button>
-                  ))}
-                </div>
-              </section>
-            ) : (
-              messages.map((m) => (
-                <Message key={m.id} from={m.role}>
-                  <MessageContent>
-                    {m.role === "assistant" ? <MessageResponse>{m.text}</MessageResponse> : m.text}
-                  </MessageContent>
-                  {m.role === "assistant" && (
-                    <MessageActions>
-                      <MessageAction
-                        tooltip="Copy response"
-                        onClick={() => navigator.clipboard.writeText(m.text)}
+                    <StaggerItem key={s}>
+                      <motion.div
+                        whileHover={{ y: -2, scale: 1.012 }}
+                        whileTap={{ scale: 0.985 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
                       >
-                        <Copy />
-                      </MessageAction>
-                    </MessageActions>
-                  )}
-                </Message>
-              ))
+                        <Button
+                          variant="outline"
+                          className="glass-panel w-full h-auto min-h-16 justify-start whitespace-normal p-4 sm:p-5 text-left rounded-2xl border-border/80 hover:border-primary/40 hover:shadow-md transition-all shadow-xs cursor-pointer"
+                          onClick={() => send({ text: s })}
+                        >
+                          {s}
+                        </Button>
+                      </motion.div>
+                    </StaggerItem>
+                  ))}
+                </StaggerContainer>
+              </motion.section>
+            ) : (
+              <AnimatePresence initial={false}>
+                {messages.map((m) => (
+                  <motion.div
+                    key={m.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                  >
+                    <Message from={m.role}>
+                      <MessageContent>
+                        {m.role === "assistant" ? <MessageResponse>{m.text}</MessageResponse> : m.text}
+                      </MessageContent>
+                      {m.role === "assistant" && (
+                        <MessageActions>
+                          <MessageAction
+                            tooltip="Copy response"
+                            onClick={() => navigator.clipboard.writeText(m.text)}
+                          >
+                            <Copy />
+                          </MessageAction>
+                        </MessageActions>
+                      )}
+                    </Message>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             )}
             {status === "submitted" && (
-              <p aria-live="polite" className="text-sm text-muted-foreground">
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                aria-live="polite"
+                className="text-sm text-muted-foreground"
+              >
                 {selectedModel.name} is thinking…
-              </p>
+              </motion.p>
             )}
           </ConversationContent>
           <ConversationScrollButton aria-label="Scroll to latest message" />

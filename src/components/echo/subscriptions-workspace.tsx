@@ -23,6 +23,7 @@ import {
   ExternalLink,
   ChevronDown,
 } from "lucide-react";
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -637,7 +638,12 @@ export function SubscriptionsWorkspace() {
             </div>
 
             {/* Hero Section */}
-            <div className="relative pt-4 pb-10 sm:pt-8 sm:pb-12 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              className="relative pt-4 pb-10 sm:pt-8 sm:pb-12 text-center"
+            >
               {/* Subtle ambient light glow */}
               <div className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 h-72 w-96 rounded-full bg-gradient-to-tr from-purple-500/15 via-indigo-500/10 to-transparent blur-3xl -z-10" />
 
@@ -651,14 +657,22 @@ export function SubscriptionsWorkspace() {
                 Want to get more out of EchoGPT Plus? Subscribe to one of our
                 professional plans.
               </p>
-            </div>
+            </motion.div>
 
             {/* 4 Plans Pricing Grid */}
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 pb-14">
-              {PLANS.map((plan) => (
-                <div
+              {PLANS.map((plan, idx) => (
+                <motion.div
                   key={plan.id}
-                  className={`group relative flex flex-col justify-between rounded-3xl border p-6 backdrop-blur-xs transition-all duration-200 ${
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.28,
+                    delay: idx * 0.06,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  whileHover={{ y: -6, scale: 1.015 }}
+                  className={`group relative flex flex-col justify-between rounded-3xl border p-6 backdrop-blur-xs transition-colors duration-200 cursor-pointer ${
                     plan.isPopular
                       ? "border-primary bg-card/90 shadow-xl shadow-primary/10 ring-1 ring-primary/40 dark:shadow-primary/5"
                       : "border-border/80 bg-card/60 hover:border-primary/40 hover:shadow-lg"
@@ -716,8 +730,8 @@ export function SubscriptionsWorkspace() {
                       <div className="font-semibold text-foreground text-[11px] uppercase tracking-wider text-muted-foreground mb-3">
                         Plan Perks
                       </div>
-                      {plan.features.map((feat, idx) => (
-                        <div key={idx} className="flex items-start gap-2.5">
+                      {plan.features.map((feat, fIdx) => (
+                        <div key={fIdx} className="flex items-start gap-2.5">
                           <Check className="size-4 shrink-0 text-primary stroke-[2.5] mt-0.5" />
                           <span className="leading-snug">{feat}</span>
                         </div>
@@ -730,7 +744,7 @@ export function SubscriptionsWorkspace() {
                     <span>265+ AI Models</span>
                     <span className="font-semibold text-primary">Included</span>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 

@@ -1,16 +1,24 @@
 import type { Metadata } from "next";
-import { DM_Sans, Space_Grotesk } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
 
-const fontSans = DM_Sans({
+const fontSans = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
+  display: "swap",
 });
 
-const fontHeading = Space_Grotesk({
+const fontHeading = Geist({
   subsets: ["latin"],
   variable: "--font-heading",
+  display: "swap",
+});
+
+const fontMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -49,7 +57,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fontSans.variable} ${fontHeading.variable} h-full antialiased`}
+      className={`${fontSans.variable} ${fontHeading.variable} ${fontMono.variable} h-full antialiased`}
     >
       <head>
         <script

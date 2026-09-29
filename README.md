@@ -7,7 +7,7 @@ A redesigned, modern, and accessible AI conversational workspace for writing, an
 EchoGPT Evolved improves the overall UI/UX of EchoGPT with a calm, glassmorphic design system, responsive navigation, thread persistence with Supabase, dynamic AI response interactions, and customizable themes.
 
 ### Key Features
-- **Modern Workspace UI**: Clean glassmorphism styling (`glass-panel`), soft grid backgrounds (`soft-grid`), and typography with DM Sans & Space Grotesk.
+- **Modern Workspace UI**: Clean glassmorphism styling (`glass-panel`), soft grid backgrounds (`soft-grid`), and modern typography with Geist & Geist Mono.
 - **Thread & Chat Management**: Organized conversation history, fast search filtering, starter prompts, and dynamic routing (`/` and `/chat/[threadId]`).
 - **Interactive AI Feed**: Fluid conversation flow with message actions (copy response, status shimmer, stick-to-bottom auto-scroll).
 - **Responsive Navigation**: Desktop sidebar paired with a mobile slide-out navigation sheet.
