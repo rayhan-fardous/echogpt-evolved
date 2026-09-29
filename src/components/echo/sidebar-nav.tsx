@@ -25,6 +25,7 @@ import {
   ClipboardList,
   ShieldCheck,
   LayoutGrid,
+  GraduationCap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -332,6 +333,7 @@ export function SidebarNav({
   const isStoreActive = pathname === "/store";
   const isResumeActive = pathname === "/resume";
   const isTasksActive = pathname === "/tasks";
+  const isSopActive = pathname === "/sop";
   const [search, setSearch] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -782,10 +784,24 @@ export function SidebarNav({
             <li>
               <button
                 type="button"
-                onClick={() => setActiveModal("sop-builder")}
-                className="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] font-normal text-foreground/80 transition-colors hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                onClick={() => {
+                  router.push("/sop");
+                  onSelect?.();
+                  onClose?.();
+                }}
+                className={`group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-[15px] transition-colors ${
+                  isSopActive
+                    ? "bg-accent font-semibold text-accent-foreground shadow-xs border border-border/70"
+                    : "font-normal text-foreground/80 hover:bg-black/[0.04] hover:text-foreground dark:hover:bg-white/[0.06]"
+                }`}
               >
-                <SopBuilderIcon className="size-[22px] text-muted-foreground/90 transition-colors group-hover:text-foreground shrink-0" />
+                <GraduationCap
+                  className={`size-[22px] transition-colors shrink-0 ${
+                    isSopActive
+                      ? "text-primary"
+                      : "text-muted-foreground/90 group-hover:text-foreground"
+                  }`}
+                />
                 <span className="truncate">AI SOP Builder</span>
               </button>
             </li>
@@ -1297,46 +1313,7 @@ export function SidebarNav({
 
 
 
-      {/* AI SOP Builder Modal */}
-      <Dialog
-        open={activeModal === "sop-builder"}
-        onOpenChange={(open) => !open && setActiveModal(null)}
-      >
-        <DialogContent className="glass-panel sm:max-w-md">
-          <DialogHeader>
-            <div className="flex items-center gap-2 text-primary">
-              <SopBuilderIcon className="size-6" />
-              <DialogTitle className="font-heading text-xl">
-                AI SOP Builder
-              </DialogTitle>
-            </div>
-            <DialogDescription>
-              Build comprehensive, audit-ready Standard Operating Procedures in
-              seconds.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3 pt-2 text-xs">
-            <div className="space-y-1">
-              <label className="font-semibold text-muted-foreground">
-                Process Title
-              </label>
-              <Input placeholder="e.g., Incident Response Protocol, Employee Onboarding..." />
-            </div>
-            <div className="space-y-1">
-              <label className="font-semibold text-muted-foreground">
-                Target Audience / Role
-              </label>
-              <Input placeholder="e.g., DevOps Engineers, Support Specialists" />
-            </div>
-            <Button
-              className="w-full font-medium"
-              onClick={() => setActiveModal(null)}
-            >
-              Generate Structured SOP
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+
 
       {/* Support Modal */}
       <Dialog
