@@ -932,19 +932,53 @@ export function SidebarNav({
         </div>
       </nav>
 
-      {/* Bottom Actions: Settings button (above) & Sign in / Account info (below) */}
+      {/* Bottom Actions: Settings button (when logged out) & User account card (when logged in) */}
       <div className="mt-auto border-t border-border/60 p-3 space-y-2 bg-background/50 backdrop-blur-sm">
-        {/* Settings button with Popover */}
+        {/* Popover Menu: triggered by User card when signed in, or Settings button when signed out */}
         <Popover open={profilePopoverOpen} onOpenChange={setProfilePopoverOpen}>
-          <PopoverTrigger asChild>
-            <button
-              type="button"
-              className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[15px] font-medium text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
-            >
-              <Settings className="size-[19px] text-muted-foreground shrink-0" />
-              <span>Settings</span>
-            </button>
-          </PopoverTrigger>
+          {user ? (
+            <PopoverTrigger asChild>
+              <div className="group flex w-full items-center justify-between gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer">
+                <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                  <img
+                    src={userAvatarSrc}
+                    alt={displayName}
+                    className="size-10 rounded-full object-cover shrink-0 ring-1 ring-border/60"
+                  />
+                  <div className="min-w-0 flex-1 text-left">
+                    <div className="truncate text-[15px] font-medium text-foreground leading-tight">
+                      {displayName}
+                    </div>
+                    <div className="truncate text-[13px] text-muted-foreground leading-tight mt-0.5">
+                      Free
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push("/subscriptions");
+                    onSelect?.();
+                    onClose?.();
+                  }}
+                  className="shrink-0 rounded-full bg-[#27272a] hover:bg-[#3f3f46] text-white border border-white/10 px-3.5 py-1.5 text-[13px] font-medium transition-all shadow-xs cursor-pointer active:scale-95"
+                >
+                  Upgrade
+                </button>
+              </div>
+            </PopoverTrigger>
+          ) : (
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[15px] font-medium text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
+              >
+                <Settings className="size-[19px] text-muted-foreground shrink-0" />
+                <span>Settings</span>
+              </button>
+            </PopoverTrigger>
+          )}
 
           <PopoverContent
             side="top"
@@ -979,19 +1013,6 @@ export function SidebarNav({
               >
                 <Star className="size-[18px] shrink-0" />
                 <span className="font-medium">Upgrade</span>
-              </button>
-
-              {/* Preferences */}
-              <button
-                type="button"
-                onClick={() => {
-                  setProfilePopoverOpen(false);
-                  setActiveModal("settings");
-                }}
-                className="flex w-full items-center gap-3 rounded-xl px-2.5 py-2 text-[15px] text-foreground/90 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
-              >
-                <Settings className="size-[18px] shrink-0" />
-                <span className="font-medium">Preferences</span>
               </button>
 
               {/* Share Website */}
@@ -1090,41 +1111,8 @@ export function SidebarNav({
           </PopoverContent>
         </Popover>
 
-        {/* Below Settings: Sign in button if logged out, or Account Info card if logged in */}
-        {user ? (
-          <div
-            onClick={() => setProfilePopoverOpen(true)}
-            className="group flex w-full items-center justify-between gap-2.5 rounded-xl px-2 py-1.5 transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.06] cursor-pointer"
-          >
-            <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <img
-                src={userAvatarSrc}
-                alt={displayName}
-                className="size-10 rounded-full object-cover shrink-0 ring-1 ring-border/60"
-              />
-              <div className="min-w-0 flex-1 text-left">
-                <div className="truncate text-[15px] font-medium text-foreground leading-tight">
-                  {displayName}
-                </div>
-                <div className="truncate text-[13px] text-muted-foreground leading-tight mt-0.5">
-                  Free
-                </div>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push("/subscriptions");
-                onSelect?.();
-                onClose?.();
-              }}
-              className="shrink-0 rounded-full bg-[#27272a] hover:bg-[#3f3f46] text-white border border-white/10 px-3.5 py-1.5 text-[13px] font-medium transition-all shadow-xs cursor-pointer active:scale-95"
-            >
-              Upgrade
-            </button>
-          </div>
-        ) : (
+        {/* Below Settings: Sign in button if logged out */}
+        {!user && (
           <Button
             className="h-10.5 w-full justify-center gap-2 rounded-xl text-[15px] font-medium cursor-pointer shadow-xs"
             onClick={() => setAuthDialogOpen(true)}

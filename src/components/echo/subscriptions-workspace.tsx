@@ -48,6 +48,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { SidebarNav, type ThreadSummary } from "./sidebar-nav";
+import { ModelIcon } from "./model-icon";
 import { supabase } from "@/integrations/supabase/client";
 import { getAllThreadMetadata } from "@/lib/thread-storage";
 import { toast } from "sonner";
@@ -833,10 +834,10 @@ export function SubscriptionsWorkspace() {
                         {filteredBasic.map((model) => (
                           <span
                             key={model}
-                            className="inline-flex items-center gap-1.5 rounded-xl border border-border/70 bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/50"
+                            className="inline-flex items-center gap-2 rounded-xl border border-border/70 bg-background/80 px-2.5 py-1.5 text-xs font-medium text-foreground transition-all hover:border-primary/50 hover:bg-accent/30 shadow-2xs"
                           >
-                            <span className="size-1.5 rounded-full bg-emerald-500" />
-                            {model}
+                            <ModelIcon modelName={model} className="size-4 shrink-0" />
+                            <span>{model}</span>
                           </span>
                         ))}
                       </div>
@@ -860,10 +861,10 @@ export function SubscriptionsWorkspace() {
                           {filteredAdvanced.map((model) => (
                             <span
                               key={model}
-                              className="inline-flex items-center gap-1.5 rounded-xl border border-border/70 bg-background/80 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:border-primary/50 hover:bg-accent/40"
+                              className="inline-flex items-center gap-2 rounded-xl border border-border/70 bg-background/80 px-2.5 py-1.5 text-xs font-medium text-foreground transition-all hover:border-primary/50 hover:bg-accent/40 shadow-2xs"
                             >
-                              <span className="size-1.5 rounded-full bg-primary" />
-                              {model}
+                              <ModelIcon modelName={model} className="size-4 shrink-0" />
+                              <span>{model}</span>
                             </span>
                           ))}
                         </div>

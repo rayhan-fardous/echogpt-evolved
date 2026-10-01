@@ -1,13 +1,70 @@
 import React from "react";
 import type { AIModel } from "@/lib/models-data";
 
-interface ModelIconProps {
-  provider: AIModel["provider"];
+export interface ModelIconProps {
+  provider?: AIModel["provider"] | string;
+  modelName?: string;
   className?: string;
 }
 
-export function ModelIcon({ provider, className = "size-6" }: ModelIconProps) {
-  switch (provider) {
+export function getModelProvider(name: string): string {
+  const lower = name.toLowerCase().trim();
+
+  if (lower.includes("echogpt")) return "echogpt";
+  if (lower.includes("nemotron") || lower.includes("nvidia")) return "nvidia";
+  if (lower.includes("longcat") || lower.includes("meituan")) return "meituan";
+  if (lower.includes("deepseek") || lower.startsWith("r1") || lower.includes(" r1")) return "deepseek";
+  if (lower.includes("glm") || lower.includes("zhipu")) return "glm";
+  if (lower.includes("tencent") || lower.includes("hunyuan") || lower.startsWith("hy-") || lower.includes(" hy")) return "tencent";
+  if (lower.includes("mimo") || lower.includes("xiaomi")) return "mimo";
+  if (lower.includes("qwen")) return "qwen";
+  if (
+    lower.includes("gpt") ||
+    lower.includes("codex") ||
+    lower.includes("openai") ||
+    /\bo[1-4](-mini|-pro|\b)/i.test(lower)
+  ) return "openai";
+  if (lower.includes("kimi") || lower.includes("moonshot")) return "kimi";
+  if (lower.includes("gemini") || lower.includes("gemma")) return "gemini";
+  if (lower.includes("minimax")) return "minimax";
+  if (lower.includes("grok") || lower.includes("xai")) return "xai";
+  if (lower.includes("llama") || lower.includes("meta") || lower.includes("unslopnemo")) return "meta";
+  if (lower.includes("claude") || lower.includes("anthropic")) return "anthropic";
+  if (
+    lower.includes("mistral") ||
+    lower.includes("mixtral") ||
+    lower.includes("ministral") ||
+    lower.includes("codestral") ||
+    lower.includes("devstral") ||
+    lower.includes("voxtral")
+  ) return "mistral";
+  if (lower.includes("sonar") || lower.includes("perplexity")) return "perplexity";
+  if (lower.includes("command") || lower.includes("cohere")) return "cohere";
+  if (lower.includes("granite") || lower.includes("ibm")) return "ibm";
+  if (lower.includes("nova") || lower.includes("amazon") || lower.includes("aws")) return "amazon";
+  if (lower.includes("phi") || lower.includes("wizardlm") || lower.includes("microsoft")) return "microsoft";
+  if (lower.includes("ernie") || lower.includes("baidu")) return "baidu";
+  if (lower.includes("ling")) return "ling";
+  if (lower.includes("seed") || lower.includes("bytedance")) return "bytedance";
+  if (lower.includes("solar") || lower.includes("upstage")) return "upstage";
+  if (lower.includes("lfm") || lower.includes("liquid")) return "liquid";
+  if (lower.includes("step")) return "stepfun";
+  if (lower.includes("thinking") || lower.includes("trinity")) return "thinkingmachines";
+  if (lower.includes("dots")) return "dots";
+  if (lower.includes("muse")) return "muse";
+  if (lower.includes("aion")) return "aion";
+  if (lower.includes("hermes")) return "nous";
+  if (lower.includes("reka")) return "reka";
+
+  return "default";
+}
+
+export function ModelIcon({ provider, modelName, className = "size-6" }: ModelIconProps) {
+  const resolvedProvider = (
+    provider || (modelName ? getModelProvider(modelName) : "default")
+  ).toLowerCase();
+
+  switch (resolvedProvider) {
     case "echogpt":
       return (
         <div
@@ -278,13 +335,243 @@ export function ModelIcon({ provider, className = "size-6" }: ModelIconProps) {
         </div>
       );
 
+    case "anthropic":
+    case "claude":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-[#CC785C] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="size-3/4">
+            <path d="M4.5 19.5L12 4.5l7.5 15h-3.2l-1.6-3.4H9.3l-1.6 3.4H4.5zm5.9-5.8h3.2L12 9.5l-1.6 4.2z" />
+          </svg>
+        </div>
+      );
+
+    case "mistral":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-[#FF7000] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="size-3/4">
+            <rect x="4" y="6" width="3.2" height="3.2" />
+            <rect x="16.8" y="6" width="3.2" height="3.2" />
+            <rect x="4" y="10.4" width="7.2" height="3.2" />
+            <rect x="12.8" y="10.4" width="7.2" height="3.2" />
+            <rect x="4" y="14.8" width="16" height="3.2" />
+          </svg>
+        </div>
+      );
+
+    case "perplexity":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-[#1FB8CD] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" className="size-3/4">
+            <line x1="12" y1="4" x2="12" y2="20" />
+            <line x1="4" y1="12" x2="20" y2="12" />
+            <line x1="6.3" y1="6.3" x2="17.7" y2="17.7" />
+            <line x1="17.7" y1="6.3" x2="6.3" y2="17.7" />
+          </svg>
+        </div>
+      );
+
+    case "cohere":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-[#39594C] text-[#39D393] shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="size-3/4">
+            <circle cx="8" cy="12" r="4.5" />
+            <circle cx="16" cy="12" r="4.5" />
+          </svg>
+        </div>
+      );
+
+    case "microsoft":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-[#18181b] shadow-xs`}
+          aria-hidden="true"
+        >
+          <div className="grid grid-cols-2 gap-0.5 size-3">
+            <div className="bg-[#F25022] rounded-[1px]" />
+            <div className="bg-[#7FBA00] rounded-[1px]" />
+            <div className="bg-[#00A4EF] rounded-[1px]" />
+            <div className="bg-[#FFB900] rounded-[1px]" />
+          </div>
+        </div>
+      );
+
+    case "amazon":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-[#232F3E] text-[#FF9900] shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" className="size-3/4">
+            <path d="M5 14c4 4 10 4 14 0" />
+            <path d="M17.5 12l2 2.5-2 1" fill="currentColor" />
+          </svg>
+        </div>
+      );
+
+    case "ibm":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-[#0F62FE] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="size-3/4">
+            <rect x="5" y="7" width="14" height="2" rx="0.5" />
+            <rect x="5" y="11" width="14" height="2" rx="0.5" />
+            <rect x="5" y="15" width="14" height="2" rx="0.5" />
+          </svg>
+        </div>
+      );
+
+    case "bytedance":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#00D4B2] to-[#3C8CE7] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="size-3/4">
+            <path d="M5 15h2.5V9H5v6zm4 3h2.5V6H9v12zm4-2h2.5V8H13v8zm4-3h2.5v-3H17v3z" />
+          </svg>
+        </div>
+      );
+
+    case "baidu":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-[#2932E1] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="size-3/4">
+            <circle cx="8" cy="8" r="2" />
+            <circle cx="16" cy="8" r="2" />
+            <circle cx="5" cy="13" r="1.8" />
+            <circle cx="19" cy="13" r="1.8" />
+            <path d="M12 11c-3 0-5 2-5 5s2 4 5 4 5-1 5-4-2-5-5-5z" />
+          </svg>
+        </div>
+      );
+
+    case "ling":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#059669] to-[#10B981] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" className="size-3/4">
+            <circle cx="12" cy="12" r="7" />
+            <path d="M12 8v8M8 12h8" />
+          </svg>
+        </div>
+      );
+
+    case "liquid":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#0284C7] to-[#38BDF8] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="size-3/4">
+            <path d="M12 4C12 4 6.5 10.5 6.5 15a5.5 5.5 0 0 0 11 0c0-4.5-5.5-11-5.5-11z" />
+          </svg>
+        </div>
+      );
+
+    case "upstage":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#EA580C] to-[#F59E0B] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" className="size-3/4">
+            <circle cx="12" cy="12" r="4.5" fill="currentColor" />
+            <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4" />
+          </svg>
+        </div>
+      );
+
+    case "dots":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#7C3AED] to-[#A78BFA] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="size-3/4">
+            <circle cx="6.5" cy="12" r="2.2" />
+            <circle cx="12" cy="12" r="2.8" />
+            <circle cx="17.5" cy="12" r="2.2" />
+          </svg>
+        </div>
+      );
+
+    case "muse":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#6366F1] via-[#EC4899] to-[#F43F5E] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="currentColor" className="size-3/4">
+            <path d="M12 3.5l2.4 5.3 5.8.5-4.4 3.8 1.4 5.7-5.2-3.1-5.2 3.1 1.4-5.7-4.4-3.8 5.8-.5L12 3.5z" />
+          </svg>
+        </div>
+      );
+
+    case "aion":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#0D9488] to-[#06B6D4] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-3/4">
+            <circle cx="12" cy="12" r="7.5" />
+            <circle cx="12" cy="12" r="3.5" fill="currentColor" opacity="0.7" />
+          </svg>
+        </div>
+      );
+
+    case "nous":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#8B5CF6] to-[#EC4899] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" className="size-3/4">
+            <path d="M12 3v18M5 8l14 8M5 16L19 8" />
+          </svg>
+        </div>
+      );
+
+    case "reka":
+      return (
+        <div
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#4F46E5] to-[#7C3AED] text-white shadow-xs`}
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" className="size-3/4">
+            <path d="M6 18V6h6a4 4 0 0 1 0 8H6m6 0l5 4" />
+          </svg>
+        </div>
+      );
+
     default:
       return (
         <div
-          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary`}
+          className={`${className} relative flex shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-primary/80 to-purple-500 text-white shadow-xs`}
           aria-hidden="true"
         >
-          <div className="size-2 rounded-full bg-primary" />
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-3/4">
+            <path d="M12 3v3m0 12v3M3 12h3m12 0h3M7.8 7.8l2.1 2.1m4.2 4.2 2.1 2.1M7.8 16.2l2.1-2.1m4.2-4.2 2.1-2.1" />
+          </svg>
         </div>
       );
   }

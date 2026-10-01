@@ -26,18 +26,24 @@ export function ChatInputBox({
 }: ChatInputBoxProps) {
   const [text, setText] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [hasScrolledMultiline, setHasScrolledMultiline] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Auto-resize textarea
+  // Auto-resize textarea and detect multiline
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       const scrollHeight = textareaRef.current.scrollHeight;
       // Cap at 180px
       textareaRef.current.style.height = `${Math.min(scrollHeight, 180)}px`;
+      setHasScrolledMultiline(scrollHeight > 44);
+    } else {
+      setHasScrolledMultiline(false);
     }
   }, [text]);
+
+  const isMultiline = text.includes("\n") || hasScrolledMultiline;
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -50,6 +56,7 @@ export function ChatInputBox({
     if (!text.trim() || status === "submitted") return;
     onSubmit({ text: text.trim() });
     setText("");
+    setHasScrolledMultiline(false);
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
     }
@@ -83,11 +90,14 @@ export function ChatInputBox({
         <ConnectorsPopover />
       </div>
 
-      {/* Rounded Chat Insert Box */}
+      {/* Chat Insert Box */}
       <div
         className={cn(
-          "relative flex items-center gap-2 rounded-full border border-border/80 dark:border-border/60 bg-background/90 dark:bg-muted/20 pl-3.5 pr-2 py-1.5 sm:py-2 transition-all shadow-xs",
-          "focus-within:border-purple-500/60 focus-within:ring-2 focus-within:ring-purple-500/15"
+          "relative flex gap-2 border border-border/80 dark:border-border/60 bg-background/90 dark:bg-muted/20 pl-3.5 pr-2 transition-all duration-200 shadow-xs",
+          "focus-within:border-purple-500/60 focus-within:ring-2 focus-within:ring-purple-500/15",
+          isMultiline
+            ? "items-end rounded-2xl py-2"
+            : "items-center rounded-full py-1.5 sm:py-2"
         )}
       >
         {/* Link / Attachment Button */}
@@ -97,7 +107,10 @@ export function ChatInputBox({
               type="button"
               onClick={() => fileInputRef.current?.click()}
               aria-label="Attach link or file"
-              className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              className={cn(
+                "inline-flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+                isMultiline && "mb-1"
+              )}
             >
               <Link2 className="size-4.5" />
             </button>
@@ -128,7 +141,10 @@ export function ChatInputBox({
           onKeyDown={handleKeyDown}
           placeholder="Ask a question..."
           aria-label="Ask a question"
-          className="w-full flex-1 resize-none bg-transparent py-1 text-sm sm:text-base text-foreground placeholder:text-muted-foreground/75 focus:outline-none focus:ring-0 leading-snug max-h-36 overflow-y-auto"
+          className={cn(
+            "w-full flex-1 resize-none bg-transparent text-sm sm:text-base text-foreground placeholder:text-muted-foreground/75 focus:outline-none focus:ring-0 leading-snug max-h-36 overflow-y-auto",
+            isMultiline ? "py-1.5" : "py-1"
+          )}
         />
 
         {/* Voice Input (Mic) */}
@@ -140,7 +156,8 @@ export function ChatInputBox({
               aria-label="Voice input"
               className={cn(
                 "inline-flex size-8 shrink-0 items-center justify-center rounded-full text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
-                isRecording && "text-purple-600 bg-purple-500/15 animate-pulse"
+                isRecording && "text-purple-600 bg-purple-500/15 animate-pulse",
+                isMultiline && "mb-1"
               )}
             >
               <Mic className="size-4.5" />
@@ -159,7 +176,8 @@ export function ChatInputBox({
           aria-label="Send question"
           className={cn(
             "relative inline-flex size-9 sm:size-10 shrink-0 items-center justify-center rounded-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white shadow-md shadow-purple-500/25 transition-all",
-            "hover:scale-105 active:scale-95 disabled:hover:scale-100 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/40"
+            "hover:scale-105 active:scale-95 disabled:hover:scale-100 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/40",
+            isMultiline && "mb-0.5"
           )}
         >
           {status === "submitted" ? (
